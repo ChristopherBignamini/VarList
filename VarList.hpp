@@ -5,6 +5,19 @@ class VarList {
 
 public:
 
+    // TODO: missing methods
+    // finalize               
+    // append                 
+    // search                 
+    // getID                  
+    // getName                
+    // getFirstVariable       
+    // getNextVariable
+
+    // TODO: add check (with traits) on ContainerType, with original var list requirements 
+
+    // TODO: the varlist example int icon-kernels uses an arrai of var list, define a container for VarList
+
     VarList(std::string i_list_name): m_list_id(getGlobalId()), m_list_name(i_list_name)
     {
     }
