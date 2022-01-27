@@ -1,6 +1,7 @@
 #include <string>
+#include <unordered_map>
 
-template <typename ContainerType>
+template <typename T, typename V>
 class VarList {
 
 public:
@@ -12,7 +13,7 @@ public:
 
     // TODO: add check (with traits) on ContainerType, with original var list requirements
 
-    // TODO: the varlist example int icon-kernels uses an arrai of var list, define a container for VarList
+    // TODO: the varlist example int icon-kernels uses an array of var list, define a container for VarList
 
 
     VarList(std::string i_list_name)
@@ -37,6 +38,12 @@ public:
         return *this;
     }
 
+    //    void append(const typename ContainerType<T>::value_type& i_new_variable);
+    void append(const typename std::unordered_map<T,V>::value_type& i_new_variable)
+    {
+        m_list.insert(i_new_variable);
+    }
+
     unsigned int getId(void) const
     {
         return m_list_id;
@@ -47,17 +54,17 @@ public:
         return m_list_name;
     }
 
-    typename ContainerType::value_type const * getFirstVariable(void) const
+    T const * getFirstVariable(void) const
     {
         return &(*m_list.begin()); // begin is available in all stl containers
     }
 
-    typename ContainerType::value_type const * getNextVariable(typename ContainerType::value_type const * i_current_element) const
+    T const * getNextVariable(T const * i_current_element) const
     {
         if(i_current_element){
             // Find iterator position for the input element (ugly, possibly buggy)
             // TODO: if correct switch to algorithm
-            for(typename ContainerType::iterator it = m_list.begin(); it<m_list.end(); ++it) {
+            for(typename std::unordered_map<T,V>::iterator it = m_list.begin(); it<m_list.end(); ++it) {
                 if(std::addressof(*it) == i_current_element) {
                     return &(*(it.next()));
                 }
@@ -68,7 +75,7 @@ public:
 
 private:
 
-    ContainerType m_list;
+    std::unordered_map<T,V> m_list;
 
     const unsigned int m_list_id;
 
@@ -83,4 +90,3 @@ private:
     }
 
 };
-

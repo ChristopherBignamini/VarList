@@ -1,17 +1,20 @@
 #include "VarList.hpp"
 #include <iostream>
 
-#include <vector>
+#include <unordered_map>
 
 int main() {
 
-    VarList<std::vector<double>> d_var_list_1("my_first_double_varlist");
-    std::cout<<d_var_list_1.getListId()<<std::endl;
+    VarList<int, double> i_d_var_list_1("my_first_int_double_varlist");
+    std::cout<<i_d_var_list_1.getId()<<std::endl;
 
-    VarList<std::vector<double>> d_var_list_2("my_second_double_varlist");
-    std::cout<<d_var_list_2.getListId()<<std::endl;
+    VarList<int, double> i_d_var_list_2("my_second_int_double_varlist");
+    std::cout<<i_d_var_list_2.getId()<<std::endl;
 
-    VarList<std::vector<int>> i_var_list_1("my_second_int_varlist");
-    std::cout<<i_var_list_1.getListId()<<std::endl;
+    VarList<char, double> c_d_var_list_1("my_firs_char_double_varlist");
+    std::cout<<c_d_var_list_1.getId()<<std::endl;
+
+    VarList<char, double> c_d_var_list_2(c_d_var_list_1);
+    std::cout<<c_d_var_list_2.getId()<<std::endl;
 
 }
