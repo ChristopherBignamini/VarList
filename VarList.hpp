@@ -47,12 +47,24 @@ public:
         return m_list_name;
     }
 
-    const typename ContainerType::value_type& getFirstVariable(void) const
+    typename ContainerType::value_type const * getFirstVariable(void) const
     {
-        return *m_list.begin(); // begin is available in all stl containers
+        return &(*m_list.begin()); // begin is available in all stl containers
     }
 
-    const typename ContainerType::value_type& getNextVariable(void) const;
+    typename ContainerType::value_type const * getNextVariable(typename ContainerType::value_type const * i_current_element) const
+    {
+        if(i_current_element){
+            // Find iterator position for the input element (ugly, possibly buggy)
+            // TODO: if correct switch to algorithm
+            for(typename ContainerType::iterator it = m_list.begin(); it<m_list.end(); ++it) {
+                if(std::addressof(*it) == i_current_element) {
+                    return &(*(it.next()));
+                }
+            }
+        }
+        return NULL;
+    }
 
 private:
 
