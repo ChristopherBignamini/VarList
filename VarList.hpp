@@ -9,10 +9,6 @@ public:
     // finalize
     // append
     // search
-    // getID
-    // getName
-    // getFirstVariable
-    // getNextVariable
 
     // TODO: add check (with traits) on ContainerType, with original var list requirements
 
@@ -36,17 +32,27 @@ public:
     VarList& operator=(const VarList& i_var_list)
     {
         m_list = i_var_list.m_list;
-        m_list_id = getGlobalId();
         m_list_name = i_var_list.m_list_name;
 
         return *this;
     }
 
-    const unsigned int getListId(void)
+    unsigned int getId(void) const
     {
         return m_list_id;
     }
 
+    std::string getName(void) const
+    {
+        return m_list_name;
+    }
+
+    const typename ContainerType::value_type& getFirstVariable(void) const
+    {
+        return *m_list.begin(); // begin is available in all stl containers
+    }
+
+    const typename ContainerType::value_type& getNextVariable(void) const;
 
 private:
 
@@ -65,3 +71,4 @@ private:
     }
 
 };
+
