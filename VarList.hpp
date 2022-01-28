@@ -6,11 +6,8 @@ class VarList {
 
 public:
 
-    // TODO: missing methods
-    // finalize
-
+    // TODO: add exception handling
     // TODO: add check (with traits) on ContainerType, with original var list requirements
-
     // TODO: the varlist example int icon-kernels uses an array of var list, define a container for VarList
 
     VarList(std::string i_list_name)
@@ -41,6 +38,11 @@ public:
         m_list.insert(i_new_variable);
     }
 
+    void finalize(void)
+    {
+        m_list.clear();
+    }
+    
     // TODO: is key-based search the only one we need?
     // TODO: do not forget that unordered map ordering can change, do we really need a ptr???
     const V* search(const T& i_variable_name) const
