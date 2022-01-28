@@ -8,13 +8,10 @@ public:
 
     // TODO: missing methods
     // finalize
-    // append
-    // search
 
     // TODO: add check (with traits) on ContainerType, with original var list requirements
 
     // TODO: the varlist example int icon-kernels uses an array of var list, define a container for VarList
-
 
     VarList(std::string i_list_name)
         :m_list_id(getGlobalId())
@@ -44,6 +41,17 @@ public:
         m_list.insert(i_new_variable);
     }
 
+    // TODO: is key-based search the only one we need?
+    // TODO: do not forget that unordered map ordering can change, do we really need a ptr???
+    const V* search(const T& i_variable_name) const
+    {
+        typename std::unordered_map<T,V>::const_iterator item = m_list.find(i_variable_name);
+        if(item != m_list.end())
+            return &(item->second);
+        else
+            return NULL;
+    }
+
     unsigned int getId(void) const
     {
         return m_list_id;
@@ -54,23 +62,29 @@ public:
         return m_list_name;
     }
 
-    T const * getFirstVariable(void) const
+    unsigned int getListLength(void) const
     {
-        return &(*m_list.begin()); // begin is available in all stl containers
+        return m_list.size();
     }
 
-    T const * getNextVariable(T const * i_current_element) const
+    // TODO: do not forget that unordered map ordering can change!
+    std::pair<T,const V*> getFirstVariable(void) const
     {
-        if(i_current_element){
-            // Find iterator position for the input element (ugly, possibly buggy)
-            // TODO: if correct switch to algorithm
-            for(typename std::unordered_map<T,V>::iterator it = m_list.begin(); it<m_list.end(); ++it) {
-                if(std::addressof(*it) == i_current_element) {
-                    return &(*(it.next()));
-                }
-            }
-        }
-        return NULL;
+        // begin is available in all stl containers
+        std::pair<T,const V*> first_variable(m_list.begin()->first, &(m_list.begin()->second));
+        return first_variable;
+    }
+
+    // TODO: do not forget that unordered map ordering can change!
+    // TODO: why do we need this method? Can we just pass the previous variable key?
+    std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element) const
+    {
+        typename std::unordered_map<T,V>::const_iterator item = m_list.find(i_current_element.first);
+        item++;
+        if(item != m_list.end())
+            return std::pair<T,const V*>(item->first, &(item->second));
+        else
+            return std::pair<T,const V*>(item->first, NULL);
     }
 
 private:
