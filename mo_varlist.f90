@@ -1,4 +1,4 @@
-module varlist
+module libvarlist
     use iso_c_binding
 
     implicit none
@@ -6,69 +6,68 @@ module varlist
     private
     public :: cpp_varlist
 
-    include "varlist_def.f90"???
+    include "varlist_def.f90"
 
-    type cpp_varlist
+    type varlist
         private
         type(c_ptr) :: varlist_ptr
     contains
-        final :: delete_varlist
-        procedure :: delete => delete_varlist_polymorph ???
+        final :: varlist_delete
+        procedure :: delete => varlist_delete_polymorph ! TODO: ???
         procedure :: finalize => varlist_finalize
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
     end type cpp_varlist
 
-    interface cpp_varlist
-       procedure create_varlist
+    interface varlist
+       procedure varlist_create ! TODO: why not in contains section above?
     end interface
 
 contains
 
-    function create_varlist(str)
+    function varlist_create(str)
         implicit none
-        type(c_ptr) :: create_varlist_c
-        character(len=1, kind=C_CHAR), intent(in) :: str(*)
-        create_varlist_c%ptr = create_varlist_c(str)
+        type(c_ptr) :: varlist_create_c
+        character(len=*), intent(in) :: str
+        varlist_create_c%ptr = create_varlist_c(str)
     end function create_varlist_c
 
-    subroutine delete_varlist(this)
+    subroutine varlist_delete(this)
         implicit none
-        type(c_ptr) :: this
-        call delete_varlist_c(this%ptr)
+        type(varlist) :: this
+        call varlist_delete_c(this%ptr)
     end subroutine
 
     ! TODO: I don't understand why we need this one
     subroutine delete_varlist_polymorph(this)
         implicit none
-        class(c_ptr) :: this
-        call delete_varlist_c(this%ptr)
+        class(varlist) :: this
+        call varlist_delete_c(this%ptr)
     end subroutine
 
     subroutine varlist_finalize(this)
         implicit none
-        type(c_ptr) :: this
+        type(varlist) :: this
         call varlist_finalize_c(this%ptr)
     end subroutine
 
     integer function varlist_getId(this)
         implicit none
-        class(cpp_varlist), intent(in) :: this
+        class(varlist), intent(in) :: this
         varlist_getId = varlist_getId_c(this%ptr)
     end function
 
     character(len=*) function varlist_getName(this)
         implicit none
-        type(c_ptr), intent(in), value :: cpp_varlist
+        class(varlist), intent(in) :: this
         varlist_getName = varlist_getName_c(this%ptr)
     end function
 
-    function varlist_getListLength(this)
+    integer function varlist_getListLength(this)
         implicit none
-        type(c_ptr), intent(in), value :: cpp_varlist
-        varlist_getName = varlist_getName_c(this%ptr)
+        class(varlist), intent(in) :: this
+        varlist_getListLength = varlist_getListLength_c(this%ptr)
     end function
-
 
 end module class_varlist

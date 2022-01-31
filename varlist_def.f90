@@ -1,42 +1,41 @@
 interface
-    function create_varlist_c(str) bind(C, name="create_varlist")
+    function varlist_create_c(str) bind(C, name="varlist_create")
         use iso_c_bindings
         implicit none
-        type(c_ptr) :: create_varlist_c
+        type(c_ptr) :: varlist_create_c
         character(len=1, kind=C_CHAR), intent(in) :: str(*)
-        ! TODO: what do we return?
     end function create_varlist_c
 
-    subroutine delete_varlist_c(cpp_varlist) bind(C, name="delete_varlist")
+    subroutine varlist_delete_c(varlist) bind(C, name="varlist_delete")
         use iso_c_binding
         implicit none
-        type(c_ptr), value :: cpp_varlist
+        type(c_ptr), value :: varlist
     end subroutine
 
-    subroutine varlist_finalize_c(cpp_varlist) bind(C, name="varlist_finalize")
+    subroutine varlist_finalize_c(varlist) bind(C, name="varlist_finalize")
         use iso_c_binding
         implicit none
-        type(c_ptr), value :: cpp_varlist
+        type(c_ptr), value :: varlist
     end subroutine
 
-    function varlist_getId_c(cpp_varlist) bind(C, name="varlist_getId")
+    function varlist_getId_c(varlist) bind(C, name="varlist_getId")
         use iso_c_binding
         implicit none
-        integer(c_int), value :: id
-        type(c_ptr), intent(in), value :: cpp_varlist
+        integer(c_int), value :: varlist_getId_c
+        type(c_ptr), intent(in), value :: varlist
     function
 
-    function varlist_getName_c(cpp_varlist) bind(C, name="varlist_getName")
+    function varlist_getName_c(varlist) bind(C, name="varlist_getName")
         use iso_c_binding
         implicit none
-        character(len=1, kind=C_CHAR), intent(out) :: str(*)
-        type(c_ptr), intent(in), value :: cpp_varlist
+        character(len=:, kind=C_CHAR), pointer :: varlist_getName_c
+        type(c_ptr), intent(in), value :: varlist
     end function
 
-    function varlist_getListLength_c(cpp_varlist) bind(C, name="varlist_getId")
+    function varlist_getListLength_c(varlist) bind(C, name="varlist_getId")
         use iso_c_binding
         implicit none
-        integer(c_int), value :: list_length
-        type(c_ptr), intent(in), value :: cpp_varlist
+        integer(c_int), value :: varlist_getListLength_c
+        type(c_ptr), intent(in), value :: varlist
     end function
 end interface

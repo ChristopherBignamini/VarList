@@ -1,9 +1,9 @@
 program test_varlist
-    use varlist
+    use libvarlist
     implicit none
-    type(cpp_varlist) :: f_varlist
+    type(varlist) :: f_varlist
 
-    f_varlist = cpp_varlist("test varlist")
+    f_varlist = varlist("test varlist")
     write(*,*) f_varlist%getId()
 
 #ifdef __GNUC__

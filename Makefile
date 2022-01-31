@@ -8,7 +8,7 @@ LDFLAGS = -lc++
 all: f_test_varlist
 f_test_varlist.o : mo_varlist_mod.o
 
-f_test_varlist : %.o mo_varlist_mod.o VarListC.o VarList.o
+f_test_varlist : %.o mo_varlist_mod.o varlist_capi.o VarList.o
 	${FC} $^ -o $@ ${LDFLAGS}
 
 %.o : %.f90
