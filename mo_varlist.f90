@@ -1,7 +1,5 @@
 module libvarlist
-    use iso_c_binding
-
-    implicit none
+    use, intrinsic :: iso_c_binding
 
     private
     public :: cpp_varlist
@@ -18,7 +16,7 @@ module libvarlist
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
-    end type cpp_varlist
+    end type varlist
 
     interface varlist
        procedure varlist_create ! TODO: why not in contains section above?
@@ -31,43 +29,43 @@ contains
         type(c_ptr) :: varlist_create_c
         character(len=*), intent(in) :: str
         varlist_create_c%ptr = create_varlist_c(str)
-    end function create_varlist_c
+    end function varlist_create
 
     subroutine varlist_delete(this)
         implicit none
         type(varlist) :: this
         call varlist_delete_c(this%ptr)
-    end subroutine
+    end subroutine varlist_delete
 
     ! TODO: I don't understand why we need this one
     subroutine delete_varlist_polymorph(this)
         implicit none
         class(varlist) :: this
         call varlist_delete_c(this%ptr)
-    end subroutine
+    end subroutine delete_varlist_polymorph
 
     subroutine varlist_finalize(this)
         implicit none
         type(varlist) :: this
         call varlist_finalize_c(this%ptr)
-    end subroutine
+    end subroutine varlist_finalize
 
     integer function varlist_getId(this)
         implicit none
         class(varlist), intent(in) :: this
         varlist_getId = varlist_getId_c(this%ptr)
-    end function
+    end function varlist_getId
 
     character(len=*) function varlist_getName(this)
         implicit none
         class(varlist), intent(in) :: this
         varlist_getName = varlist_getName_c(this%ptr)
-    end function
+    end function varlist_getName
 
     integer function varlist_getListLength(this)
         implicit none
         class(varlist), intent(in) :: this
         varlist_getListLength = varlist_getListLength_c(this%ptr)
-    end function
+    end function varlist_getListLength
 
-end module class_varlist
+end module libvarlist
