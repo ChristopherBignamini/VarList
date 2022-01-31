@@ -42,7 +42,7 @@ public:
     {
         m_list.clear();
     }
-    
+
     // TODO: is key-based search the only one we need?
     // TODO: do not forget that unordered map ordering can change, do we really need a ptr???
     const V* search(const T& i_variable_name) const
@@ -104,5 +104,4 @@ private:
        static unsigned int global_list_id = 0;
        return global_list_id++;
     }
-
 };
