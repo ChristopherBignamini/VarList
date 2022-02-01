@@ -21,21 +21,22 @@ interface
     function varlist_getId_c(varlist) bind(C, name="varlist_getId")
         use, intrinsic :: iso_c_binding
         implicit none
-        integer(c_int), value :: varlist_getId_c
+        integer(c_int) :: varlist_getId_c
         type(c_ptr), intent(in), value :: varlist
     end function varlist_getId_c
 
-    function varlist_getName_c(varlist) bind(C, name="varlist_getName")
-        use, intrinsic :: iso_c_binding
-        implicit none
-        character(len=:, kind=C_CHAR), pointer :: varlist_getName_c
-        type(c_ptr), intent(in), value :: varlist
-    end function varlist_getName_c
+!    function varlist_getName_c(varlist) bind(C, name="varlist_getName") result(list_name)! TODO: I'm not sure of signature and implementation
+!        use, intrinsic :: iso_c_binding
+!        implicit none
+!        character(:, kind=C_CHAR),allocatable :: list_name
+!!        character(len=:, kind=C_CHAR), pointer :: varlist_getName_c
+!        type(c_ptr), intent(in), value :: varlist
+!    end function varlist_getName_c
 
     function varlist_getListLength_c(varlist) bind(C, name="varlist_getId")
         use, intrinsic :: iso_c_binding
         implicit none
-        integer(c_int), value :: varlist_getListLength_c
+        integer(c_int) :: varlist_getListLength_c
         type(c_ptr), intent(in), value :: varlist
     end function varlist_getListLength_c
 end interface
