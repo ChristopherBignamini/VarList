@@ -3,19 +3,22 @@ CXX = CC
 
 FCFLAGS = -Wall -Wextra
 CCFLAGS = -Wall -Wextra
-LDFLAGS = -lc++
+LDFLAGS = -lgfortran -lstdc++
 
 all: f_test_varlist
-f_test_varlist.o : mo_varlist_mod.o
+f_test_varlist.o : varlist_mod.o
 
-f_test_varlist : %.o mo_varlist_mod.o varlist_capi.o VarList.o
+f_test_varlist : f_test_varlist.o varlist_mod.o varlist_capi.o
 	${FC} $^ -o $@ ${LDFLAGS}
 
-%.o : %.f90
-	${FC} ${FCFLAGS} -c $< -o $@
+f_test_varlist.o : f_test_varlist.f90
+	${FC} ${FCFLAGS} -c f_test_varlist.f90 -o f_test_varlist.o
 
-%.o : %.cpp
-	${CXX} ${CCFLAGS} -c $^ -o $@
+varlist_mod.o : varlist_mod.f90
+	${FC} ${FCFLAGS} -c varlist_mod.f90 -o varlist_mod.o
+
+varlist_capi.o : varlist_capi.cpp
+	${CXX} ${CCFLAGS} -c varlist_capi.cpp -o varlist_capi.o
 
 .PHONY : clean
 
