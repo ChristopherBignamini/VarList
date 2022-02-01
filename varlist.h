@@ -1,11 +1,15 @@
 #ifdef __cplusplus
+
+template <typename T, typename V>
+class VarList;
+
+typedef VarList<int,double> VarListIntDouble;
+
 extern "C" {
 
-    template <typename T, typename V>
-    class VarList;
 
     // TODO: what is the best way to manage template parameters?
-    typedef VarList<int,double>  VARLIST;
+    typedef VarListIntDouble VARLIST;
 
 #else
 
