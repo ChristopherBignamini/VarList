@@ -14,7 +14,7 @@ module libvarlist
         procedure :: delete => varlist_delete_polymorph ! TODO: ???
         procedure :: finalize => varlist_finalize
         procedure :: getId => varlist_getId
- !       procedure :: getName => varlist_getName
+        procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
     end type varlist
 
@@ -56,13 +56,20 @@ contains
         varlist_getId = varlist_getId_c(this%varlist_ptr)
     end function varlist_getId
 
-!    function varlist_getName(this) result(list_name) ! TODO: I'm not sure of signature and implementation
-!        implicit none
-!        character(:),allocatable :: list_name
-!        class(varlist), intent(in) :: this
-!    !    varlist_getName = varlist_getName_c(this%varlist_ptr)
-!        list_name = varlist_getName_c(this%varlist_ptr)
-!    end function varlist_getName
+    !! TODO: "strongly inspired" by the following link..
+    !! https://stackoverflow.com/questions/9972743/creating-a-fortran-interface-to-a-c-function-that-returns-a-char
+    function varlist_getName(this) ! TODO: I'm not sure of signature and implementation
+        use, intrinsic :: iso_c_binding
+        implicit none
+        character*255 :: varlist_getName
+        character*255 list_name
+        integer name_length
+        class(varlist), intent(in) :: this
+
+        call varlist_getName_c(this%varlist_ptr, list_name, name_length)
+
+        varlist_getName = list_name(1:name_length-1)
+    end function varlist_getName
 
     integer function varlist_getListLength(this)
         implicit none

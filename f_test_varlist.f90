@@ -8,7 +8,9 @@ program test_varlist
 
     f_varlist2 = varlist("test varlist 2")
     write(*,*) f_varlist2%getId()
+    write(*,*) f_varlist2%getName()
 
+    
 #ifdef __GNUC__
     call f_varlist1%delete
     call f_varlist2%delete

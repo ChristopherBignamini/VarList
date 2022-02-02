@@ -39,7 +39,7 @@ extern "C" {
 
     unsigned int varlist_getId(const VARLIST* i_varlist);
 
-    const char* varlist_getName(const VARLIST* i_varlist);
+    void varlist_getName(const VARLIST* i_varlist, char* io_varlist_name, int& io_name_length);
 
     unsigned int varlist_getListLength(const VARLIST* i_varlist);
 

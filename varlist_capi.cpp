@@ -39,16 +39,13 @@ unsigned int varlist_getId(const VARLIST* i_varlist)
 // TODO: Safer implementation needed!
 // Signature is different wrt VarList class method to force
 // memory management responsability awarness :). The user is
-// responsible for memory deallocation!
-void varlist_getName(const VARLIST* i_varlist, char* io_varlist_name)
+// responsible for memory allocation/deallocation!
+void varlist_getName(const VARLIST* i_varlist, char* io_varlist_name, int& io_name_length)
 {
-    if(io_varlist_name != NULL)
-        delete io_varlist_name;
-
-    std::string varlist_name(i_varlist->getName());
-
-    io_varlist_name = new char[varlist_name.length()];
-    varlist_name.copy(io_varlist_name, varlist_name.length());
+    // TODO: check io_varlist_name validity
+    const std::string varlist_name(i_varlist->getName());
+    io_name_length = varlist_name.length();
+    std::strcpy(io_varlist_name, varlist_name.c_str());
 }
 
 unsigned int varlist_getListLength(const VARLIST* i_varlist)

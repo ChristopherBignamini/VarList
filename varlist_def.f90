@@ -25,13 +25,13 @@ interface
         type(c_ptr), intent(in), value :: varlist
     end function varlist_getId_c
 
-!    function varlist_getName_c(varlist) bind(C, name="varlist_getName") result(list_name)! TODO: I'm not sure of signature and implementation
-!        use, intrinsic :: iso_c_binding
-!        implicit none
-!        character(:, kind=C_CHAR),allocatable :: list_name
-!!        character(len=:, kind=C_CHAR), pointer :: varlist_getName_c
-!        type(c_ptr), intent(in), value :: varlist
-!    end function varlist_getName_c
+    subroutine varlist_getName_c(varlist, varlist_name, varlist_name_length) bind(C, name="varlist_getName") ! TODO: I'm not sure of signature and implementation
+        use, intrinsic :: iso_c_binding
+        implicit none
+        character(len=1, kind=C_CHAR) :: varlist_name
+        integer(c_int) :: varlist_name_length
+        type(c_ptr), intent(in), value :: varlist
+    end subroutine varlist_getName_c
 
     function varlist_getListLength_c(varlist) bind(C, name="varlist_getId")
         use, intrinsic :: iso_c_binding
