@@ -19,8 +19,10 @@ void varlist_delete(VARLIST* i_varlist)
 // TODO: missing
 // VarList& operator=(const VarList& i_varlist)
 
-// TODO: missing
-// void append(const typename std::unordered_map<T,V>::value_type& i_new_variable)
+void append(VARLIST* io_varlist, int i_name, double i_value)
+{
+    io_varlist->append(std::unordered_map<int,double>::value_type(i_name, i_value));
+}
 
 void varlist_finalize(VARLIST* io_varlist)
 {

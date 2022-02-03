@@ -3,13 +3,16 @@ program test_varlist
     implicit none
     type(varlist) :: f_varlist1, f_varlist2
 
-    f_varlist1 = varlist("test varlist 1")
-    write(*,*) f_varlist1%getId()
+    f_varlist1 = varlist("test varlist1")
+    print*, f_varlist1%getId()
+    print*, f_varlist1%getName()
 
-    f_varlist2 = varlist("test varlist 2")
-    write(*,*) f_varlist2%getId()
-    write(*,*) f_varlist2%getName()
-
+    f_varlist2 = varlist("test varlist2")
+    print*, f_varlist2%getId()
+    print*, f_varlist2%getName()
+    call f_varlist2%append(1,1.1D0)
+   
+    
     
 #ifdef __GNUC__
     call f_varlist1%delete

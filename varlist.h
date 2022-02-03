@@ -29,8 +29,15 @@ extern "C" {
     // TODO: missing
     // VarList& operator=(const VarList& i_varlist)
 
-    // TODO: missing
-    // void append(const typename std::unordered_map<T,V>::value_type& i_new_variable)
+    /**
+     * Append new variable to the list
+     *
+     * @param io_varlist The VarList instance to be modified
+     * @param name Variable name (integer, string, etc...)
+     * @param value Variable value
+     */
+    // TODO: use generic variable_type
+    void append(VARLIST* io_varlist, int i_name, double i_value);
 
     void varlist_finalize(VARLIST* i_varlist);
 

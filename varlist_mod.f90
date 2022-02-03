@@ -12,6 +12,7 @@ module libvarlist
     contains
         final :: varlist_delete
         procedure :: delete => varlist_delete_polymorph ! TODO: ???
+        procedure :: append => varlist_append
         procedure :: finalize => varlist_finalize
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
@@ -43,6 +44,14 @@ contains
         class(varlist) :: this
         call varlist_delete_c(this%varlist_ptr)
     end subroutine varlist_delete_polymorph
+
+    subroutine varlist_append(this, name, val)
+        implicit none
+        class(varlist) :: this
+        integer(c_int), intent(in) :: name
+        real(c_double), intent(in) :: val
+        call varlist_append_c(this%varlist_ptr, name, val)
+    end subroutine varlist_append
 
     subroutine varlist_finalize(this)
         implicit none
