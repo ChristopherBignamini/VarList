@@ -14,6 +14,7 @@ module libvarlist
         procedure :: delete => varlist_delete_polymorph ! TODO: ???
         procedure :: append => varlist_append
         procedure :: finalize => varlist_finalize
+        procedure :: search => varlist_search
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
@@ -29,7 +30,17 @@ contains
         implicit none
         type(varlist) :: varlist_create
         character(len=*), intent(in) :: str
-        varlist_create%varlist_ptr = varlist_create_c(str)
+        character(len=1, kind=C_CHAR) :: c_str(len_trim(str) + 1)
+        integer :: N, i
+
+        ! Converting Fortran string to C string
+        N = len_trim(str)
+        do i = 1, N
+            c_str(i) = str(i:i)
+        end do
+        c_str(N + 1) = C_NULL_CHAR
+
+        varlist_create%varlist_ptr = varlist_create_c(c_str)
     end function varlist_create
 
     subroutine varlist_delete(this)
@@ -47,11 +58,19 @@ contains
 
     subroutine varlist_append(this, name, val)
         implicit none
-        class(varlist) :: this
+        class(varlist), intent(in) :: this
         integer(c_int), intent(in) :: name
         real(c_double), intent(in) :: val
         call varlist_append_c(this%varlist_ptr, name, val)
     end subroutine varlist_append
+
+    function varlist_search(this, name)
+        implicit none
+        real(c_double), pointer :: varlist_search
+        class(varlist), intent(in) :: this
+        integer(c_int), intent(in) :: name
+        call c_f_pointer(varlist_search_c(this%varlist_ptr, name), varlist_search)
+    end function varlist_search
 
     subroutine varlist_finalize(this)
         implicit none
@@ -77,7 +96,7 @@ contains
 
         call varlist_getName_c(this%varlist_ptr, list_name, name_length)
 
-        varlist_getName = list_name(1:name_length-1)
+        varlist_getName = list_name(1:name_length)
     end function varlist_getName
 
     integer function varlist_getListLength(this)

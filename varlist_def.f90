@@ -14,13 +14,21 @@ interface
 
     ! TODO: use generic variable_type
     ! TODO: this should be a subroutine, right?
-    subroutine varlist_append_c(varlist, name, val) bind(C, name="append")
+    subroutine varlist_append_c(varlist, name, val) bind(C, name="varlist_append")
         use, intrinsic :: iso_c_binding
         implicit none
         type(c_ptr), value :: varlist
-        integer(c_int), intent(in) :: name
-        real(c_double), intent(in) :: val
+        integer(c_int), intent(in), value :: name
+        real(c_double), intent(in), value :: val
     end subroutine varlist_append_c
+
+    function varlist_search_c(varlist, name) bind(C, name="varlist_search")
+        use, intrinsic :: iso_c_binding
+        implicit none
+        type(c_ptr) :: varlist_search_c
+        type(c_ptr), intent(in), value :: varlist
+        integer(c_int), intent(in) :: name
+    end function varlist_search_c
 
     subroutine varlist_finalize_c(varlist) bind(C, name="varlist_finalize")
         use, intrinsic :: iso_c_binding

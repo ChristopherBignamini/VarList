@@ -19,7 +19,7 @@ void varlist_delete(VARLIST* i_varlist)
 // TODO: missing
 // VarList& operator=(const VarList& i_varlist)
 
-void append(VARLIST* io_varlist, int i_name, double i_value)
+void varlist_append(VARLIST* io_varlist, int i_name, double i_value)
 {
     io_varlist->append(std::unordered_map<int,double>::value_type(i_name, i_value));
 }
@@ -29,9 +29,11 @@ void varlist_finalize(VARLIST* io_varlist)
     io_varlist->finalize();
 }
 
-
-// TODO: missing, how to we manage template and C interfacing?
-// const V* search(const T& i_variable_name) const
+// TODO: how to we manage template and C interfacing?
+const double* varlist_search(const VARLIST* i_varlist, const int& i_variable_name)
+{
+    return i_varlist->search(i_variable_name);
+}
 
 unsigned int varlist_getId(const VARLIST* i_varlist)
 {

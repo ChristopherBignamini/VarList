@@ -37,12 +37,12 @@ extern "C" {
      * @param value Variable value
      */
     // TODO: use generic variable_type
-    void append(VARLIST* io_varlist, int i_name, double i_value);
+    void varlist_append(VARLIST* io_varlist, int i_name, double i_value);
 
     void varlist_finalize(VARLIST* i_varlist);
 
-    // TODO: missing, how to we manage template and C interfacing?
-    // const V* search(const T& i_variable_name) const
+    // TODO: how to we manage template and C interfacing?
+    const double* varlist_search(const VARLIST* i_varlist, const int& i_variable_name);
 
     unsigned int varlist_getId(const VARLIST* i_varlist);
 
