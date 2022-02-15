@@ -1,7 +1,9 @@
 program test_varlist
     use libvarlist
+    use libvarlistitem
     implicit none
     type(varlist) :: f_varlist1, f_varlist2
+    type(varlist_item) :: f_varlist_item
     real*8, pointer :: val_ptr
 
     f_varlist1 = varlist("test varlist1")
@@ -15,9 +17,13 @@ program test_varlist
     val_ptr => f_varlist2%search(1)
     if (associated(val_ptr)) print*, val_ptr
 
+    f_varlist_item = f_varlist2%getFirstVariable()
+    print*, f_varlist_item%getName()
+    print*, f_varlist_item%getValuePtr()
     
 #ifdef __GNUC__
     call f_varlist1%delete
     call f_varlist2%delete
 #endif
 end program
+
