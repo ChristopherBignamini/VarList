@@ -1,5 +1,7 @@
 module libvarlist
     use, intrinsic :: iso_c_binding
+    use libvarlistitem
+    use libvarlistitem_c
 
     private
     public :: varlist
@@ -18,6 +20,7 @@ module libvarlist
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
+        procedure :: getFirstVariable => varlist_getFirstVariable
     end type varlist
 
     interface varlist
@@ -104,5 +107,14 @@ contains
         class(varlist), intent(in) :: this
         varlist_getListLength = varlist_getListLength_c(this%varlist_ptr)
     end function varlist_getListLength
+
+    function varlist_getFirstVariable(this) result(varlist_first_variable)
+        implicit none
+        class(varlist), intent(in) :: this
+        type(varlist_item) :: varlist_first_variable
+        type(varlist_item_c) :: varlist_first_variable_c
+        varlist_first_variable_c = varlist_getFirstVariable_c(this%varlist_ptr)
+        varlist_first_variable = varlist_item(varlist_first_variable_c%name, varlist_first_variable_c%value_ptr)
+    end function varlist_getFirstVariable
 
 end module libvarlist

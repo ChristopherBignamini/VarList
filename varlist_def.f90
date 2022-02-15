@@ -51,10 +51,18 @@ interface
         type(c_ptr), intent(in), value :: varlist
     end subroutine varlist_getName_c
 
-    function varlist_getListLength_c(varlist) bind(C, name="varlist_getId")
+    function varlist_getListLength_c(varlist) bind(C, name="varlist_getListLength")
         use, intrinsic :: iso_c_binding
         implicit none
         integer(c_int) :: varlist_getListLength_c
         type(c_ptr), intent(in), value :: varlist
     end function varlist_getListLength_c
-end interface
+
+    function varlist_getFirstVariable_c(varlist) bind(C, name="varlist_getFirstVariable")
+        use, intrinsic :: iso_c_binding
+        use libvarlistitem_c, only : varlist_item_c
+        implicit none
+        type(varlist_item_c) :: varlist_getFirstVariable_c
+        type(c_ptr), intent(in), value :: varlist
+    end function varlist_getFirstVariable_c
+ end interface

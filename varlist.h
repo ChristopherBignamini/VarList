@@ -3,16 +3,28 @@
 template <typename T, typename V>
 class VarList;
 
+// TODO: what is the best way to manage template parameters?
 typedef VarList<int,double> VarListIntDouble;
 
 extern "C" {
 
+    struct VarListItem {
 
-    // TODO: what is the best way to manage template parameters?
+        VarListItem(int i_name, const double* i_value_ptr)
+                   :m_name(i_name)
+                   ,m_value_ptr(i_value_ptr)
+        {}
+
+        int m_name;
+        const double* m_value_ptr;
+    };
+
+    typedef VarListItem VARLISTITEM;
     typedef VarListIntDouble VARLIST;
 
 #else
 
+    typedef struct VARLISTITEM VARLISTITEM;
     typedef struct VARLIST VARLIST;
 
 #endif
@@ -51,7 +63,7 @@ extern "C" {
     unsigned int varlist_getListLength(const VARLIST* i_varlist);
 
     // TODO: missing, should we have a wrapper for std::pair?
-    // std::pair<T,const V*> getFirstVariable(void) const
+    VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist);
 
     // TODO: missing, should we have a wrapper for std::pair?
     // std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element) const
