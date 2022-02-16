@@ -78,10 +78,10 @@ public:
     }
 
     // TODO: do not forget that unordered map ordering can change!
-    // TODO: why do we need this method? Can we just pass the previous variable key?
-    std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element) const
+    // TODO: why do we need this method?
+    std::pair<T,const V*> getNextVariable(const T& i_current_element_key) const
     {
-        typename std::unordered_map<T,V>::const_iterator item = m_list.find(i_current_element.first);
+        typename std::unordered_map<T,V>::const_iterator item = m_list.find(i_current_element_key);
         item++;
         if(item != m_list.end())
             return std::pair<T,const V*>(item->first, &(item->second));

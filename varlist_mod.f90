@@ -21,6 +21,7 @@ module libvarlist
         procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
         procedure :: getFirstVariable => varlist_getFirstVariable
+        procedure :: getNextVariable => varlist_getNextVariable
     end type varlist
 
     interface varlist
@@ -116,5 +117,15 @@ contains
         varlist_first_variable_c = varlist_getFirstVariable_c(this%varlist_ptr)
         varlist_first_variable = varlist_item(varlist_first_variable_c%name, varlist_first_variable_c%value_ptr)
     end function varlist_getFirstVariable
+
+    function varlist_getNextVariable(this, current_variable) result(varlist_next_variable)
+        implicit none
+        class(varlist), intent(in) :: this
+        class(varlist_item), intent(in) :: current_variable ! TODO: only the key is needed
+        type(varlist_item) :: varlist_next_variable
+        type(varlist_item_c) :: varlist_next_variable_c
+        varlist_next_variable_c = varlist_getNextVariable_c(this%varlist_ptr, current_variable%getName())
+        varlist_next_variable = varlist_item(varlist_next_variable_c%name, varlist_next_variable_c%value_ptr)
+    end function varlist_getNextVariable
 
 end module libvarlist

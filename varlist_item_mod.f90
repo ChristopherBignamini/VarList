@@ -27,10 +27,12 @@ contains
         varlist_item_create%item%value_ptr = value_ptr
     end function varlist_item_create
 
-    integer function varlist_item_getName(this)
+    function varlist_item_getName(this) result(name)
+        use, intrinsic :: iso_c_binding
         implicit none
+        integer(c_int) :: name
         class(varlist_item), intent(in) :: this
-        varlist_item_getName = this%item%name
+        name = this%item%name
     end function varlist_item_getName
 
     function varlist_item_getValuePtr(this) result(value_ptr)

@@ -57,7 +57,6 @@ unsigned int varlist_getListLength(const VARLIST* i_varlist)
     return i_varlist->getListLength();
 }
 
-// TODO: missing, should we have a wrapper for std::pair?
 //std::pair<T,const V*> getFirstVariable(const VARLIST* i_varlist) const
 VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist)
 {
@@ -66,5 +65,10 @@ VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist)
     return VARLISTITEM(first_variable.first, first_variable.second);
 }
 
-// TODO: missing, should we have a wrapper for std::pair?
-// std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element) const
+// std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element)
+VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key)
+{
+    // TODO: add safety checks
+    std::pair<int,const double*> next_variable(i_varlist->getNextVariable(i_current_variable_key));
+    return VARLISTITEM(next_variable.first, next_variable.second);
+}

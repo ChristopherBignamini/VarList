@@ -62,11 +62,9 @@ extern "C" {
 
     unsigned int varlist_getListLength(const VARLIST* i_varlist);
 
-    // TODO: missing, should we have a wrapper for std::pair?
     VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist);
 
-    // TODO: missing, should we have a wrapper for std::pair?
-    // std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element) const
+    VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key);
 
 #ifdef __cplusplus
 }

@@ -65,4 +65,14 @@ interface
         type(varlist_item_c) :: varlist_getFirstVariable_c
         type(c_ptr), intent(in), value :: varlist
     end function varlist_getFirstVariable_c
+
+    function varlist_getNextVariable_c(varlist, current_variable_key) bind(C, name="varlist_getNextVariable")
+        use, intrinsic :: iso_c_binding
+        use libvarlistitem_c, only : varlist_item_c
+        implicit none
+        type(varlist_item_c) :: varlist_getNextVariable_c
+        type(c_ptr), intent(in), value :: varlist
+        integer(c_int), intent(in), value  :: current_variable_key
+    end function varlist_getNextVariable_c
+
  end interface
