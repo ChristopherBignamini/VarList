@@ -33,18 +33,18 @@ program test_varlist
     print*, f_varlist_first_item%getValuePtr()
     print*, " "
 
-    ! Loop over other varlist elements    
-    number_of_items = f_varlist%getListLength()
-    item_number = 1
-    f_varlist_next_item = f_varlist_first_item
-    do while (item_number<number_of_items)
-        f_varlist_next_item = f_varlist%getNextVariable(f_varlist_next_item)
-        print*, "f_varlist next variable name and value"
-        print*, f_varlist_next_item%getName()
-        print*, f_varlist_next_item%getValuePtr()
-        print*, " "
-        item_number = item_number + 1
-     enddo
+!    ! Loop over other varlist elements    
+!    number_of_items = f_varlist%getListLength()
+!    item_number = 1
+!    f_varlist_next_item = f_varlist_first_item
+!    do while (item_number<number_of_items)
+!        f_varlist_next_item = f_varlist%getNextVariable(f_varlist_next_item)
+!        print*, "f_varlist next variable name and value"
+!        print*, f_varlist_next_item%getName()
+!        print*, f_varlist_next_item%getValuePtr()
+!        print*, " "
+!        item_number = item_number + 1
+!     enddo
 
 #ifdef __GNUC__
     call f_varlist%delete

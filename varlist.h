@@ -1,31 +1,28 @@
 #ifdef __cplusplus
 
+class VarListBase;
+
 template <typename T, typename V>
 class VarList;
 
-// TODO: what is the best way to manage template parameters?
-typedef VarList<int,double> VarListIntDouble;
+template <typename T, typename V>
+class VarListItem;
+
 
 extern "C" {
 
-    struct VarListItem {
+    // TODO: what is the best way to manage template parameters?
+    typedef VarList<int,double> VarListIntDouble;
+    typedef VarListItem<int,double> VarListIntDoubleItem;
 
-        VarListItem(int i_name, const double* i_value_ptr)
-                   :m_name(i_name)
-                   ,m_value_ptr(i_value_ptr)
-        {}
-
-        int m_name;
-        const double* m_value_ptr;
-    };
-
-    typedef VarListItem VARLISTITEM;
     typedef VarListIntDouble VARLIST;
+    //typedef VarListBase VARLIST;
+    typedef VarListIntDoubleItem VARLISTITEM;
 
 #else
 
-    typedef struct VARLISTITEM VARLISTITEM;
     typedef struct VARLIST VARLIST;
+    typedef struct VARLISTITEM VARLISTITEM;
 
 #endif
 
@@ -64,7 +61,7 @@ extern "C" {
 
     VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist);
 
-    VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key);
+    //    VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key);
 
 #ifdef __cplusplus
 }

@@ -1,8 +1,48 @@
+#ifndef VARLIST_HPP
+#define VARLIST_HPP
+
 #include <string>
 #include <unordered_map>
+#include <iostream>
+
+struct VarListItemBase {
+};
 
 template <typename T, typename V>
-class VarList {
+struct VarListItem : VarListItemBase {
+
+    typedef T name_type;
+    typedef V value_type;
+
+    VarListItem(T i_name, const V* i_value_ptr)
+        :m_name(i_name)
+        ,m_value_ptr(i_value_ptr)
+    {}
+
+    //    VarListItem(const std::pair<T, const V*>& i_varlist_item)
+    //    VarListItem(const std::pair<T, const V*>& i_varlist_item)
+    //    :m_name(i_varlist_item.first)
+    //    ,m_value_ptr(i_varlist_item.second)
+    //{}
+
+    T m_name;
+    const V* m_value_ptr;
+};
+
+class VarListBase {
+
+public:
+    virtual void append(const VarListItemBase& i_varlist_item_base) = 0;//{ return; }
+    void finalize(void){};
+    virtual unsigned int getListLength(void) const = 0;
+};
+
+
+template <typename T, typename V>
+class VarList : public VarListBase {
+
+    // TODO: It would be nice to have something like this
+    // typedef VarListItem<T,V> SpecVarList;
 
 public:
 
@@ -32,7 +72,13 @@ public:
         return *this;
     }
 
-    //    void append(const typename ContainerType<T>::value_type& i_new_variable);
+    void append(const VarListItemBase& i_varlist_item_base)
+    {
+        // TODO: check implementation
+        auto item = reinterpret_cast<const VarListItem<T,V>*>(&i_varlist_item_base);
+        m_list.insert({item->m_name, *item->m_value_ptr});
+    }
+
     void append(const typename std::unordered_map<T,V>::value_type& i_new_variable)
     {
         m_list.insert(i_new_variable);
@@ -70,9 +116,11 @@ public:
     }
 
     // TODO: do not forget that unordered map ordering can change!
+    //    std::pair<T,const V*> getFirstVariable(void) const
     std::pair<T,const V*> getFirstVariable(void) const
     {
         // begin is available in all stl containers
+        //        std::pair<T,const V*> first_variable(m_list.begin()->first, &(m_list.begin()->second));
         std::pair<T,const V*> first_variable(m_list.begin()->first, &(m_list.begin()->second));
         return first_variable;
     }
@@ -105,3 +153,5 @@ private:
        return global_list_id++;
     }
 };
+
+#endif //VARLIST_HPP

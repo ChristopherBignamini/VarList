@@ -57,18 +57,19 @@ unsigned int varlist_getListLength(const VARLIST* i_varlist)
     return i_varlist->getListLength();
 }
 
-//std::pair<T,const V*> getFirstVariable(const VARLIST* i_varlist) const
+//std::pair<T,const V*> getFirstVariable(const VARLIST* i_varlist)
 VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist)
 {
     // TODO: add safety checks
-    std::pair<int,const double*> first_variable(i_varlist->getFirstVariable());
-    return VARLISTITEM(first_variable.first, first_variable.second);
+    // std::pair<int,const double*> first_variable(i_varlist->getFirstVariable());
+    //    return VarListItem(first_variable.first, first_variable.second);
+    return VarListItem(i_varlist->getFirstVariable());
 }
 
-// std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element)
-VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key)
-{
-    // TODO: add safety checks
-    std::pair<int,const double*> next_variable(i_varlist->getNextVariable(i_current_variable_key));
-    return VARLISTITEM(next_variable.first, next_variable.second);
-}
+//// std::pair<T,const V*> getNextVariable(const std::pair<T,const V*>& i_current_element)
+//VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key)
+//{
+//    // TODO: add safety checks
+//    std::pair<int,const double*> next_variable(i_varlist->getNextVariable(i_current_variable_key));
+//    return VARLISTITEM(next_variable.first, next_variable.second);
+//}
