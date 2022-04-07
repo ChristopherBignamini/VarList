@@ -32,10 +32,9 @@ public:
         return *this;
     }
 
-    //    void append(const typename ContainerType<T>::value_type& i_new_variable);
-    void append(const typename std::unordered_map<T,V>::value_type& i_new_variable)
+    void append(const T& i_new_variable_name, const V& i_new_variable_value)
     {
-        m_list.insert(i_new_variable);
+        m_list.insert({i_new_variable_name, i_new_variable_value});
     }
 
     void finalize(void)
