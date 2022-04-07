@@ -8,13 +8,10 @@ LDFLAGS = -v -lgfortran -lstdc++ -g -O0
 
 all: f_test_varlist
 
-f_test_varlist.o : varlist_mod.o varlist_cfi_mod.o memory_mod.o c_functions.o
+f_test_varlist.o : varlist_mod.o varlist_cfi_mod.o memory_mod.o
 
-f_test_varlist : f_test_varlist.o varlist_mod.o varlist_cfi_mod.o varlist_capi.o memory_capi.o varlist_item_mod.o varlist_item_c_mod.o memory_mod.o CFICDesc.o c_functions.o #VarList.o
+f_test_varlist : f_test_varlist.o varlist_mod.o varlist_cfi_mod.o varlist_capi.o memory_capi.o varlist_item_mod.o varlist_item_c_mod.o memory_mod.o CFICDesc.o #VarList.o
 	${FC} $^ -o $@ ${LDFLAGS}
-
-c_functions.o : c_functions.c
-	${CC} ${CCFLAGS} -c c_functions.c -o c_functions.o
 
 f_test_varlist.o : f_test_varlist.f90
 	${FC} ${FCFLAGS} -c f_test_varlist.f90 -o f_test_varlist.o
