@@ -1,7 +1,6 @@
 #include "CFICDesc.hpp"
 #include <cstdlib>
 #include <ISO_Fortran_binding.h>
-#include <iostream>
 
 CFICDesc::CFICDesc(const CFI_cdesc_t& i_cdesc_t)
     :m_base_addr(i_cdesc_t.base_addr)
