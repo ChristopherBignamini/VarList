@@ -1,6 +1,7 @@
 #include "CFICDesc.hpp"
 #include <cstdlib>
 #include <ISO_Fortran_binding.h>
+#include <iostream>
 
 CFICDesc::CFICDesc(const CFI_cdesc_t& i_cdesc_t)
     :m_base_addr(i_cdesc_t.base_addr)
@@ -10,8 +11,9 @@ CFICDesc::CFICDesc(const CFI_cdesc_t& i_cdesc_t)
     ,m_attribute(i_cdesc_t.attribute)
     ,m_type(i_cdesc_t.type)
 {
+    // TODO: by default dim[i].lower_bound is 0 even if the corresponding fortran array has lbound = 1
     for(auto i=0; i<m_rank; i++) {
-        m_dim.push_back(CFI_dim_t{i_cdesc_t.dim[i].lower_bound, i_cdesc_t.dim[i].extent, i_cdesc_t.dim[i].sm});
+        m_dim.push_back(CFI_dim_t{i_cdesc_t.dim[i].lower_bound+1, i_cdesc_t.dim[i].extent, i_cdesc_t.dim[i].sm});
     }
 }
 
