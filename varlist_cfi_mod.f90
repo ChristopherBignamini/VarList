@@ -75,7 +75,7 @@ contains
         real*8, pointer :: varlist_search(:)
         class(varlist_cfi), intent(in) :: this
         character(len=*), intent(in) :: name
-        character(len=1, kind=C_CHAR) :: c_name ! TODO: do we need c_name(len_trim(name) + 1) as in varlist_append?
+        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
         call convertToCString(name,c_name)
         call varlist_search_c(this%varlist_cfi_ptr, c_name, varlist_search)
     end function varlist_search
