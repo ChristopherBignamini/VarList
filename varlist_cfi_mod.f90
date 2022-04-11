@@ -15,8 +15,10 @@ module libvarlistcfi
         final :: varlist_delete
         procedure :: delete => varlist_delete_polymorph ! TODO: ???
         procedure :: append => varlist_append
+        procedure :: append_2D => varlist_append_2D
 !        procedure :: finalize => varlist_finalize
         procedure :: search => varlist_search
+        procedure :: search_2D => varlist_search_2D
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
         procedure :: accessArray => varlist_accessArray
@@ -63,6 +65,16 @@ contains
         call varlist_append_c(this%varlist_cfi_ptr, c_name, val)
     end subroutine varlist_append
 
+    subroutine varlist_append_2D(this, name, val)
+        implicit none
+        class(varlist_cfi), intent(in) :: this
+        character(len=*), intent(in) :: name
+        real*8, intent(in) :: val(:,:)
+        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+        call convertToCString(name,c_name)
+        call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
+    end subroutine varlist_append_2D
+
     subroutine varlist_accessArray(this,array)
         implicit none
         class(varlist_cfi), intent(in) :: this
@@ -79,6 +91,16 @@ contains
         call convertToCString(name,c_name)
         call varlist_search_c(this%varlist_cfi_ptr, c_name, varlist_search)
     end function varlist_search
+
+    function varlist_search_2D(this, name)
+        implicit none
+        real*8, pointer :: varlist_search_2D(:,:)
+        class(varlist_cfi), intent(in) :: this
+        character(len=*), intent(in) :: name
+        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+        call convertToCString(name,c_name)
+        call varlist_search_2D_c(this%varlist_cfi_ptr, c_name, varlist_search_2D)
+    end function varlist_search_2D
 
 !    subroutine varlist_finalize(this)
 !        implicit none
