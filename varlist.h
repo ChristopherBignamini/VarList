@@ -86,9 +86,6 @@ extern "C" {
 
     void varlist_strcfi_search(const VARLISTSTRCFI* i_varlist, const char* i_variable_name, CFI_cdesc_t* io_variable);
 
-    // TODO: debug and delete
-    void varlist_strcfi_accessArray(const VARLISTSTRCFI* i_varlist, CFI_cdesc_t* io_variable);
-
     unsigned int varlist_getId(const VARLIST* i_varlist);
 
     unsigned int varlist_strcfi_getId(const VARLISTSTRCFI* i_varlist);

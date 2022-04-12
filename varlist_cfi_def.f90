@@ -46,14 +46,6 @@ interface
         character(len=1, kind=C_CHAR), intent(in) :: name(*)
     end subroutine varlist_search_2D_c
 
-    !TODO: debug and delete
-    subroutine varlist_accessArray_c(array) bind(C, name="varlist_strcfi_accessArray")
-        use, intrinsic :: iso_c_binding
-        implicit none
-!        real(c_double) :: array(:)
-        real*8, intent(in) :: array(:)
-    end subroutine varlist_accessArray_c
-
     ! TODO: uncomment
 !    subroutine varlist_finalize_c(varlist) bind(C, name="varlist_finalize")
 !        use, intrinsic :: iso_c_binding
@@ -83,7 +75,7 @@ interface
 !        integer(c_int) :: varlist_getListLength_c
 !        type(c_ptr), intent(in), value :: varlist
 !    end function varlist_getListLength_c
-    
+
     ! TODO: check and uncomment
 !    function varlist_getFirstVariable_c(varlist) bind(C, name="varlist_getFirstVariable")
 !        use, intrinsic :: iso_c_binding

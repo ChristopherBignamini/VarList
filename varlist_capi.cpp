@@ -68,19 +68,6 @@ void varlist_strcfi_search(const VARLISTSTRCFI* i_varlist, const char* i_variabl
     (i_varlist->search(std::string(i_variable_name)))->copyToCFI_cdesc_t(*io_variable);
 }
 
-// TODO: debug and delete
-void varlist_strcfi_accessArray(const VARLISTSTRCFI* i_varlist, CFI_cdesc_t* io_variable)
-{
-    std::cout<<"in varlist_strcfi_accessArray"<<std::endl;
-    std::cout<<"Base address "<<io_variable->base_addr<<std::endl;
-    printf("Input rank  %d\n", io_variable->rank);
-    for(int i=0; i<io_variable->dim[0].extent; i++){
-        CFI_index_t subscript[1] = {i};
-        double data_value = *((double *) CFI_address(io_variable, subscript));
-        printf("Element %d value: %f\n", i, data_value);
-    }
-}
-
 unsigned int varlist_getId(const VARLIST* i_varlist)
 {
     return i_varlist->getId();

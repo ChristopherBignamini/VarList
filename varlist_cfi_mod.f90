@@ -21,7 +21,6 @@ module libvarlistcfi
         procedure :: search_2D => varlist_search_2D
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
-        procedure :: accessArray => varlist_accessArray
 !        procedure :: getListLength => varlist_getListLength
 !        procedure :: getFirstVariable => varlist_getFirstVariable
 !        procedure :: getNextVariable => varlist_getNextVariable
@@ -74,13 +73,6 @@ contains
         call convertToCString(name,c_name)
         call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
     end subroutine varlist_append_2D
-
-    subroutine varlist_accessArray(this,array)
-        implicit none
-        class(varlist_cfi), intent(in) :: this
-        real*8, intent(in) :: array(:)
-        call varlist_accessArray_c(array)
-    end subroutine varlist_accessArray
 
     function varlist_search(this, name)
         implicit none
@@ -160,7 +152,7 @@ contains
         character(len=*), intent(in) :: i_fstring
         character(len=1, kind=C_CHAR) :: io_cstring(len_trim(i_fstring) + 1)
         integer :: N, i
-      
+
         ! TODO: check for code duplication
         ! Converting Fortran string to C string
         N = len_trim(i_fstring)
@@ -170,5 +162,5 @@ contains
         io_cstring(N + 1) = C_NULL_CHAR
 
     end subroutine convertToCString
-    
+
 end module libvarlistcfi
