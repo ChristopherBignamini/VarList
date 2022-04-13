@@ -46,12 +46,11 @@ interface
         character(len=1, kind=C_CHAR), intent(in) :: name(*)
     end subroutine varlist_search_2D_c
 
-    ! TODO: uncomment
-!    subroutine varlist_finalize_c(varlist) bind(C, name="varlist_finalize")
-!        use, intrinsic :: iso_c_binding
-!        implicit none
-!        type(c_ptr), value :: varlist
-!    end subroutine varlist_finalize_c
+    subroutine varlist_finalize_c(varlist) bind(C, name="varlist_finalize")
+        use, intrinsic :: iso_c_binding
+        implicit none
+        type(c_ptr), value :: varlist
+    end subroutine varlist_finalize_c
 
     function varlist_getId_c(varlist) bind(C, name="varlist_strcfi_getId")
         use, intrinsic :: iso_c_binding
@@ -68,13 +67,12 @@ interface
         type(c_ptr), intent(in), value :: varlist
     end subroutine varlist_getName_c
 
-    ! TODO: check and uncomment
-!    function varlist_getListLength_c(varlist) bind(C, name="varlist_getListLength")
-!        use, intrinsic :: iso_c_binding
-!        implicit none
-!        integer(c_int) :: varlist_getListLength_c
-!        type(c_ptr), intent(in), value :: varlist
-!    end function varlist_getListLength_c
+    function varlist_getListLength_c(varlist) bind(C, name="varlist_getListLength")
+        use, intrinsic :: iso_c_binding
+        implicit none
+        integer(c_int) :: varlist_getListLength_c
+        type(c_ptr), intent(in), value :: varlist
+    end function varlist_getListLength_c
 
     ! TODO: check and uncomment
 !    function varlist_getFirstVariable_c(varlist) bind(C, name="varlist_getFirstVariable")

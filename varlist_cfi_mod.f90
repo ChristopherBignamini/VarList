@@ -16,12 +16,12 @@ module libvarlistcfi
         procedure :: delete => varlist_delete_polymorph ! TODO: ???
         procedure :: append => varlist_append
         procedure :: append_2D => varlist_append_2D
-!        procedure :: finalize => varlist_finalize
+        procedure :: finalize => varlist_finalize
         procedure :: search => varlist_search
         procedure :: search_2D => varlist_search_2D
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
-!        procedure :: getListLength => varlist_getListLength
+        procedure :: getListLength => varlist_getListLength
 !        procedure :: getFirstVariable => varlist_getFirstVariable
 !        procedure :: getNextVariable => varlist_getNextVariable
     end type varlist_cfi
@@ -94,11 +94,11 @@ contains
         call varlist_search_2D_c(this%varlist_cfi_ptr, c_name, varlist_search_2D)
     end function varlist_search_2D
 
-!    subroutine varlist_finalize(this)
-!        implicit none
-!        class(varlist_cfi) :: this
-!        call varlist_finalize_c(this%varlist_cfi_ptr)
-!    end subroutine varlist_finalize
+    subroutine varlist_finalize(this)
+        implicit none
+        class(varlist_cfi) :: this
+        call varlist_finalize_c(this%varlist_cfi_ptr)
+    end subroutine varlist_finalize
 
     integer function varlist_getId(this)
         implicit none
@@ -120,12 +120,12 @@ contains
 
         varlist_getName = list_name(1:name_length)
     end function varlist_getName
-!
-!!    integer function varlist_getListLength(this)
-!        implicit none
-!        class(varlist_cfi), intent(in) :: this
-!        varlist_getListLength = varlist_getListLength_c(this%varlist_cfi_ptr)
-!    end function varlist_getListLength
+
+    integer function varlist_getListLength(this)
+        implicit none
+        class(varlist_cfi), intent(in) :: this
+        varlist_getListLength = varlist_getListLength_c(this%varlist_cfi_ptr)
+    end function varlist_getListLength
 
 !    function varlist_getFirstVariable(this) result(varlist_first_variable)
 !        implicit none
