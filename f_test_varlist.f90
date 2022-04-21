@@ -2,7 +2,6 @@ program test_varlist
     use libvarlist
     use libvarlistcfi
     use libvarlistitem
-    use libmemory
     implicit none
     type(varlist) :: f_varlist
     type(varlist_cfi) :: f_varlist_cfi, f_varlist_cfi_2D
