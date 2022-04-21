@@ -16,9 +16,11 @@ module libvarlistcfi
         procedure :: delete => varlist_delete_polymorph ! TODO: ???
         procedure :: append => varlist_append
         procedure :: append_2D => varlist_append_2D
+        procedure :: append_scalar => varlist_append_scalar
         procedure :: finalize => varlist_finalize
         procedure :: search => varlist_search
         procedure :: search_2D => varlist_search_2D
+        procedure :: search_scalar => varlist_search_scalar
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
@@ -74,6 +76,16 @@ contains
         call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
     end subroutine varlist_append_2D
 
+    subroutine varlist_append_scalar(this, name, val)
+        implicit none
+        class(varlist_cfi), intent(in) :: this
+        character(len=*), intent(in) :: name
+        real*8, intent(in) :: val
+        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+        call convertToCString(name,c_name)
+        call varlist_append_scalar_c(this%varlist_cfi_ptr, c_name, val)
+    end subroutine varlist_append_scalar
+
     function varlist_search(this, name)
         implicit none
         real*8, pointer :: varlist_search(:)
@@ -93,6 +105,16 @@ contains
         call convertToCString(name,c_name)
         call varlist_search_2D_c(this%varlist_cfi_ptr, c_name, varlist_search_2D)
     end function varlist_search_2D
+
+    function varlist_search_scalar(this, name)
+        implicit none
+        real*8 :: varlist_search_scalar
+        class(varlist_cfi), intent(in) :: this
+        character(len=*), intent(in) :: name
+        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+        call convertToCString(name,c_name)
+        call varlist_search_scalar_c(this%varlist_cfi_ptr, c_name, varlist_search_scalar)
+    end function varlist_search_scalar
 
     subroutine varlist_finalize(this)
         implicit none
