@@ -1,7 +1,7 @@
 module libvarlistcfi
     use, intrinsic :: iso_c_binding
     use libvarlistcfiitem
-    use libvarlistitem_c
+    use libvarlistcfiitem_c
 
     private
     public :: varlist_cfi
@@ -22,7 +22,7 @@ module libvarlistcfi
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
         procedure :: getListLength => varlist_getListLength
-!        procedure :: getFirstVariable => varlist_getFirstVariable
+        procedure :: getFirstVariable => varlist_getFirstVariable
 !        procedure :: getNextVariable => varlist_getNextVariable
     end type varlist_cfi
 
@@ -127,14 +127,17 @@ contains
         varlist_getListLength = varlist_getListLength_c(this%varlist_cfi_ptr)
     end function varlist_getListLength
 
-!    function varlist_getFirstVariable(this) result(varlist_first_variable)
-!        implicit none
-!        class(varlist_cfi), intent(in) :: this
-!        type(varlist_item) :: varlist_first_variable
-!        type(varlist_item_c) :: varlist_first_variable_c
-!        varlist_first_variable_c = varlist_getFirstVariable_c(this%varlist_cfi_ptr)
-!        varlist_first_variable = varlist_item(varlist_first_variable_c%name, varlist_first_variable_c%value_cfi_ptr)
-!    end function varlist_getFirstVariable
+    function varlist_getFirstVariable(this) result(varlist_first_variable)
+        use, intrinsic :: iso_c_binding
+        implicit none
+        class(varlist_cfi), intent(in) :: this
+        type(varlist_cfi_item) :: varlist_first_variable
+        type(varlist_cfi_item_c) :: varlist_first_variable_c
+        varlist_first_variable_c = varlist_cfi_item_c("empty", c_null_ptr)
+        !varlist_first_variable_c = varlist_getFirstVariable_c(this%varlist_cfi_ptr))
+        call varlist_getFirstVariable_c(this%varlist_cfi_ptr, varlist_first_variable_c)
+        varlist_first_variable = varlist_cfi_item(varlist_first_variable_c%name, varlist_first_variable_c%value_ptr)
+    end function varlist_getFirstVariable
 
 !    function varlist_getNextVariable(this, current_variable) result(varlist_next_variable)
 !        implicit none

@@ -1,6 +1,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "CFICDesc.hpp"
+
 template <typename T, typename V>
 class VarList {
 
@@ -104,3 +106,14 @@ private:
        return global_list_id++;
     }
 };
+
+
+template<>
+const CFICDesc* VarList<std::string,CFICDesc>::search(const std::string& i_variable_name) const;
+
+template<>
+void VarList<std::string,CFICDesc>::append(const std::string& i_new_variable_name, const CFICDesc& i_new_variable_value);
+
+// TODO: do not forget that unordered map ordering can change!
+template<>
+std::pair<std::string,const CFICDesc*> VarList<std::string,CFICDesc>::getFirstVariable(void) const;

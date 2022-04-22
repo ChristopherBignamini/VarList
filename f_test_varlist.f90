@@ -2,11 +2,13 @@ program test_varlist
     use libvarlist
     use libvarlistcfi
     use libvarlistitem
+    use libvarlistcfiitem
     use libmemory
     implicit none
     type(varlist) :: f_varlist
     type(varlist_cfi) :: f_varlist_cfi, f_varlist_cfi_2D
     type(varlist_item) :: f_varlist_first_item, f_varlist_next_item
+    type(varlist_cfi_item) :: f_varlist_cfi_first_item
     real*8, pointer :: val_ptr
     integer :: i, j, m, n, p
     real*8, pointer :: mem_wind_speed_x(:), mem_wind_speed_y(:), mem_wind_short_speed_x(:), mem_wind_short_speed_xy(:,:)
@@ -18,7 +20,7 @@ program test_varlist
     ! Create varlist
     f_varlist = varlist("test varlist")
     f_varlist_cfi = varlist_cfi("test varlist cfi")
-    
+
     ! Print varlist data
 !    print*, f_varlist%getId()
 !    print*, f_varlist%getName()
@@ -37,14 +39,14 @@ program test_varlist
 !    if (associated(val_ptr)) print*, val_ptr
 !    print*, " "
 
-    ! Get first variable and print 
+    ! Get first variable and print
 !    f_varlist_first_item = f_varlist%getFirstVariable()
 !    print*, "f_varlist first variable name and value"
 !    print*, f_varlist_first_item%getName()
 !    print*, f_varlist_first_item%getValuePtr()
 !    print*, " "
 
-    ! Loop over other varlist elements    
+    ! Loop over other varlist elements
 !    number_of_items = f_varlist%getListLength()
 !    item_number = 1
 !    f_varlist_next_item = f_varlist_first_item
@@ -66,7 +68,7 @@ program test_varlist
     wind_speed_y = (/10.0, 20.0, 30.0, 40.0, 50.0/)
     wind_short_speed_x = (/0.1, 0.2, 0.3/)
     wind_short_speed_xy = reshape([100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0], [3,3])
-    
+
     ! Add elements to varlist
     print*,'Append 1'
     call f_varlist_cfi%append("wind_speed_in_x",wind_speed_x)
@@ -75,8 +77,12 @@ program test_varlist
     print*,'Append 3'
     call f_varlist_cfi%append("wind_short_speed_in_x",wind_short_speed_x)
     print*,'Append 2D'
-    call f_varlist_cfi%append_2D("wind_short_speed_in_xy",wind_short_speed_xy) 
-    
+    call f_varlist_cfi%append_2D("wind_short_speed_in_xy",wind_short_speed_xy)
+
+    ! Print list lenght
+    number_of_items = f_varlist_cfi%getListLength()
+    print*, 'List length ', number_of_items
+
     ! Search element
     print*,'Search'
     mem_wind_speed_y => f_varlist_cfi%search("wind_speed_in_y")
@@ -117,10 +123,22 @@ program test_varlist
        end do
     endif
 
-    
+
+    ! Get first variable and print
+    f_varlist_cfi_first_item = f_varlist_cfi%getFirstVariable()
+    print*, "f_varlist_cfi first variable name and value"
+    print*, f_varlist_cfi_first_item%getName()
+!    print*, f_varlist_first_item%getValuePtr()
+    print*, " "
+
+
+    ! Delete elements
+    call f_varlist_cfi%finalize()
+    number_of_items = f_varlist_cfi%getListLength()
+    print*, 'List length ', number_of_items
+
 #ifdef __GNUC__
     call f_varlist%delete
     call f_varlist_cfi%delete
 #endif
 end program
-

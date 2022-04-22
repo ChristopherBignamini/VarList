@@ -103,11 +103,38 @@ unsigned int varlist_getListLength(const VARLIST* i_varlist)
     return i_varlist->getListLength();
 }
 
+unsigned int varlist_strcfi_getListLength(const VARLISTSTRCFI* i_varlist)
+{
+    return i_varlist->getListLength();
+}
+
 VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist)
 {
     // TODO: add safety checks
     std::pair<int,const double*> first_variable(i_varlist->getFirstVariable());
     return VARLISTITEM(first_variable.first, first_variable.second);
+}
+
+/*VARLISTCFIITEM varlist_strcfi_getFirstVariable(const VARLISTSTRCFI* i_varlist)
+{
+    // TODO: add safety checks
+    std::cout<<"varlist_strcfi_getFirstVariable"<<std::endl;
+    i_varlist->getFirstVariable();
+    std::cout<<"varlist_strcfi_getFirstVariable"<<std::endl;
+    std::cout<<i_varlist->getFirstVariable().first<<std::endl;
+    std::pair<std::string,const CFICDesc*> first_variable(i_varlist->getFirstVariable());
+    return VARLISTCFIITEM(first_variable.first, first_variable.second);
+    }*/
+
+void varlist_strcfi_getFirstVariable(const VARLISTSTRCFI* i_varlist, VARLISTCFIITEM* io_varlist_item)
+{
+    // TODO: add safety checks
+    std::pair<std::string,const CFICDesc*> first_variable(i_varlist->getFirstVariable());
+    std::cout<<"HERE"<<std::endl;
+    io_varlist_item->m_name = first_variable.first;
+    io_varlist_item->m_value_ptr = first_variable.second;
+    std::cout<<"HERE"<<std::endl;
+    //    return VARLISTCFIITEM(first_variable.first, first_variable.second);
 }
 
 VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key)

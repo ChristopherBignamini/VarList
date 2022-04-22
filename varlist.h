@@ -39,10 +39,12 @@ extern "C" {
     typedef VarListItem VARLISTITEM;
     typedef VarListIntDouble VARLIST;
     typedef VarListStringCFI VARLISTSTRCFI;
+    typedef VarListCFIItem VARLISTCFIITEM;
 
 #else
 
     typedef struct VARLISTITEM VARLISTITEM;
+    typedef struct VARLISTCFIITEM VARLISTCFIITEM;
     typedef struct VARLIST VARLIST;
     typedef struct VARLISTSTRCFI VARLISTSTRCFI;
 
@@ -96,10 +98,14 @@ extern "C" {
 
     unsigned int varlist_getListLength(const VARLIST* i_varlist);
 
+    unsigned int varlist_strcfi_getListLength(const VARLISTSTRCFI* i_varlist);
+
     VARLISTITEM varlist_getFirstVariable(const VARLIST* i_varlist);
 
-    VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key);
+    //    VARLISTCFIITEM varlist_strcfi_getFirstVariable(const VARLISTSTRCFI* i_varlist);
+    void varlist_strcfi_getFirstVariable(const VARLISTSTRCFI* i_varlist, VARLISTCFIITEM* io_varlist_item);
 
+    VARLISTITEM varlist_getNextVariable(const VARLIST* i_varlist, int i_current_variable_key);
 #ifdef __cplusplus
 }
 #endif

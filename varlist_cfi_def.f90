@@ -67,21 +67,28 @@ interface
         type(c_ptr), intent(in), value :: varlist
     end subroutine varlist_getName_c
 
-    function varlist_getListLength_c(varlist) bind(C, name="varlist_getListLength")
+    function varlist_getListLength_c(varlist) bind(C, name="varlist_strcfi_getListLength")
         use, intrinsic :: iso_c_binding
         implicit none
         integer(c_int) :: varlist_getListLength_c
         type(c_ptr), intent(in), value :: varlist
     end function varlist_getListLength_c
 
-    ! TODO: check and uncomment
-!    function varlist_getFirstVariable_c(varlist) bind(C, name="varlist_getFirstVariable")
+!    function varlist_getFirstVariable_c(varlist) bind(C, name="varlist_strcfi_getFirstVariable")
 !        use, intrinsic :: iso_c_binding
-!        use libvarlistitem_c, only : varlist_item_c
+!        use libvarlistcfiitem_c, only : varlist_cfi_item_c
 !        implicit none
-!        type(varlist_item_c) :: varlist_getFirstVariable_c
+!        type(varlist_cfi_item_c) :: varlist_getFirstVariable_c
 !        type(c_ptr), intent(in), value :: varlist
 !    end function varlist_getFirstVariable_c
+
+    subroutine varlist_getFirstVariable_c(varlist, varlist_first_variable_c) bind(C, name="varlist_strcfi_getFirstVariable")
+        use, intrinsic :: iso_c_binding
+        use libvarlistcfiitem_c, only : varlist_cfi_item_c
+        implicit none
+        type(c_ptr), intent(in), value :: varlist
+        type(varlist_cfi_item_c) :: varlist_first_variable_c
+    end subroutine varlist_getFirstVariable_c
 
     ! TODO: check and uncomment
 !    function varlist_getNextVariable_c(varlist, current_variable_key) bind(C, name="varlist_getNextVariable")
