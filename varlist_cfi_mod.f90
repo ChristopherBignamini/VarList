@@ -2,6 +2,7 @@ module libvarlistcfi
     use, intrinsic :: iso_c_binding
     use libvarlistcfiitem
     use libvarlistitem_c
+    use libutils
 
     private
     public :: varlist_cfi
@@ -167,22 +168,5 @@ contains
 !        varlist_next_variable_c = varlist_getNextVariable_c(this%varlist_cfi_ptr, current_variable%getName())
 !        varlist_next_variable = varlist_item(varlist_next_variable_c%name, varlist_next_variable_c%value_cfi_ptr)
 !    end function varlist_getNextVariable
-
-    ! TODO: buggy subroutine? Do I need to allocate io_cstring outside with the correct lenght?
-    subroutine convertToCString(i_fstring, io_cstring)
-        implicit none
-        character(len=*), intent(in) :: i_fstring
-        character(len=1, kind=C_CHAR) :: io_cstring(len_trim(i_fstring) + 1)
-        integer :: N, i
-
-        ! TODO: check for code duplication
-        ! Converting Fortran string to C string
-        N = len_trim(i_fstring)
-        do i = 1, N
-            io_cstring(i) = i_fstring(i:i) ! TODO: this line or the entire subroutine is buggy! Memory access issue?
-        end do
-        io_cstring(N + 1) = C_NULL_CHAR
-
-    end subroutine convertToCString
 
 end module libvarlistcfi
