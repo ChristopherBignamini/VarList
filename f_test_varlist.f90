@@ -2,10 +2,12 @@ program test_varlist
     use libvarlist
     use libvarlistcfi
     use libvarlistitem
+    use libmetadata
     implicit none
     type(varlist) :: f_varlist
     type(varlist_cfi) :: f_varlist_cfi, f_varlist_cfi_2D
     type(varlist_item) :: f_varlist_first_item, f_varlist_next_item
+    type(metadata_cf) :: f_metadata
     real*8, pointer :: val_ptr
     integer :: i, j, m, n, p
     real*8, pointer :: mem_wind_speed_x(:), mem_wind_speed_y(:), mem_wind_short_speed_x(:), mem_wind_short_speed_xy(:,:)
@@ -126,6 +128,10 @@ program test_varlist
     mem_pressure = f_varlist_cfi%search_scalar("pressure") 
     print*, pressure
 
+    ! Create metadata
+    f_metadata = metadata_cf()
+
+    
     
 #ifdef __GNUC__
     call f_varlist%delete
