@@ -1,100 +1,99 @@
-module libvarlistcfi
+module varcollection_mod
     use, intrinsic :: iso_c_binding
-    use libvarlistcfiitem
-    use libvarlistitem_c
-
+    use var_mod, only : t_var
+    
     private
-    public :: varlist_cfi
+    public :: varcollection
 
-    include "varlist_cfi_def.f90"
-
-    type varlist_cfi
+    type varcollection
         private
-        type(c_ptr) :: varlist_cfi_ptr
+        type(c_ptr) :: varcollection_ptr
     contains
-        final :: varlist_delete
-        procedure :: delete => varlist_delete_polymorph ! TODO: ???
-        procedure :: append => varlist_append
-        procedure :: append_2D => varlist_append_2D
-        procedure :: append_scalar => varlist_append_scalar
-        procedure :: finalize => varlist_finalize
-        procedure :: search => varlist_search
-        procedure :: search_2D => varlist_search_2D
-        procedure :: search_scalar => varlist_search_scalar
-        procedure :: getId => varlist_getId
-        procedure :: getName => varlist_getName
-        procedure :: getListLength => varlist_getListLength
-!        procedure :: getFirstVariable => varlist_getFirstVariable
-!        procedure :: getNextVariable => varlist_getNextVariable
-    end type varlist_cfi
+        final :: varcollection_delete
+        procedure :: search => varcollection_search
+        procedure :: search_2D => varcollection_search_2D
+        procedure :: search_scalar => varcollection_search_scalar
+        procedure :: getId => varcollection_getId
+        procedure :: getName => varcollection_getName
+        procedure :: getCollectionSize => varcollection_getCollectionSize
+    end type varcollection
 
-    interface varlist_cfi
-       procedure varlist_create ! TODO: why not in contains section above?
-    end interface varlist_cfi
+    interface varcollection
+       module procedure varcollection_create ! TODO: why not in contains section above?
+    end interface varcollection
 
 contains
 
-    function varlist_create(str)
+    function varcollection_create(str, var_array)
         implicit none
-        type(varlist_cfi) :: varlist_create
+        type(varcollection) :: varcollection_create
         character(len=*), intent(in) :: str
+        type(t_var), intent(in) :: var_array(:)
         character(len=1, kind=C_CHAR) :: c_str(len_trim(str) + 1)
+        integer i, N
         call convertToCString(str,c_str)
-        varlist_create%varlist_cfi_ptr = varlist_create_c(c_str)
+        varcollection_create%varcollection_ptr = varcollection_create_c(c_str)
+        do i=1:N
+           call append(this, var_array(i))
+        enddo
     end function varlist_create
-
-    subroutine varlist_delete(this)
+    
+    subroutine varcollection_delete(this)
         implicit none
-        type(varlist_cfi) :: this
-        call varlist_delete_c(this%varlist_cfi_ptr)
-    end subroutine varlist_delete
-
-    ! TODO: I don't understand why we need this one
-    subroutine varlist_delete_polymorph(this)
+        type(varcollection) :: this
+        call varcollection_delete_c(this%varcollection_ptr)
+    end subroutine varcollection_delete
+      
+    subroutine append(this, var)
         implicit none
-        class(varlist_cfi) :: this
-        call varlist_delete_c(this%varlist_cfi_ptr)
-    end subroutine varlist_delete_polymorph
+        type(varcollection) :: this
+        type(t_var), intent(in) :: var
+        ! TODO: p type detection procedure implementation 
+        call variable_append_c(this%varlist_cfi_ptr, &
+             var%var_descriptor, &
+             var%meta_data.standard_name, var%meta_data.units, var%meta_data.long_name, var%meta_data.short_name, var%meta_data.datatype, &
+             var%var_data%p)
+    end subroutine append
+      
+!    subroutine varlist_append(this, name, val)
+!        implicit none
+!        class(varlist_cfi), intent(in) :: this
+!        character(len=*), intent(in) :: name
+!        real*8, intent(in) :: val(:)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_append_c(this%varlist_cfi_ptr, c_name, val)
+!    end subroutine varlist_append
 
-    subroutine varlist_append(this, name, val)
+!    subroutine varlist_append_2D(this, name, val)
+!        implicit none
+!        class(varlist_cfi), intent(in) :: this
+!        character(len=*), intent(in) :: name
+!        real*8, intent(in) :: val(:,:)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
+!    end subroutine varlist_append_2D
+
+!    subroutine varlist_append_scalar(this, name, val)
+!        implicit none
+!        class(varlist_cfi), intent(in) :: this
+!        character(len=*), intent(in) :: name
+!        real*8, intent(in) :: val
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_append_scalar_c(this%varlist_cfi_ptr, c_name, val)
+!    end subroutine varlist_append_scalar
+
+    function varcollection_search(this, name)
         implicit none
-        class(varlist_cfi), intent(in) :: this
+        real*8, pointer :: varcollection_search(:)
+        class(varcollection), intent(in) :: this
         character(len=*), intent(in) :: name
-        real*8, intent(in) :: val(:)
         character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
         call convertToCString(name,c_name)
-        call varlist_append_c(this%varlist_cfi_ptr, c_name, val)
-    end subroutine varlist_append
-
-    subroutine varlist_append_2D(this, name, val)
-        implicit none
-        class(varlist_cfi), intent(in) :: this
-        character(len=*), intent(in) :: name
-        real*8, intent(in) :: val(:,:)
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
-    end subroutine varlist_append_2D
-
-    subroutine varlist_append_scalar(this, name, val)
-        implicit none
-        class(varlist_cfi), intent(in) :: this
-        character(len=*), intent(in) :: name
-        real*8, intent(in) :: val
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_append_scalar_c(this%varlist_cfi_ptr, c_name, val)
-    end subroutine varlist_append_scalar
-
-    function varlist_search(this, name)
-        implicit none
-        real*8, pointer :: varlist_search(:)
-        class(varlist_cfi), intent(in) :: this
-        character(len=*), intent(in) :: name
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_search_c(this%varlist_cfi_ptr, c_name, varlist_search)
-    end function varlist_search
+        call varcollection_search_c(this%varlist_cfi_ptr, c_name, varlist_search)
+    end function varcollection_search
 
     function varlist_search_2D(this, name)
         implicit none
@@ -185,4 +184,4 @@ contains
 
     end subroutine convertToCString
 
-end module libvarlistcfi
+end module varcollection_mod
