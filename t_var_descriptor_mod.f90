@@ -1,10 +1,11 @@
 module var_descriptor_mod
+  implicit none
+
   private
   public :: t_var_descriptor
 
   type t_var_descriptor
-     private
-     character(:),allocatable :: name      !< ICON-internal short name
+     character(:), allocatable :: name      !< ICON-internal short name
      integer :: jg        !< logical patch ID
      integer :: hgridID   !< cell/vertex/edge/lat-lon/...
      integer :: vgridID   !< vertical grid ID
@@ -12,13 +13,12 @@ module var_descriptor_mod
   end type t_var_descriptor
 
   interface t_var_descriptor
-     module procedure t_var_descriptor
+     procedure t_var_descriptor_create
   end interface t_var_descriptor
   
 contains
 
-!  function t_var_descriptor_create(i_name, i_jg, i_hgridID, i_vgridID, i_timeID) result(var_descriptor)
-  function t_var_descriptor_create(i_jg, i_hgridID, i_vgridID, i_timeID) result(var_descriptor)
+  function t_var_descriptor_create(i_name, i_jg, i_hgridID, i_vgridID, i_timeID) result(var_descriptor)
      implicit none
      type(t_var_descriptor) :: var_descriptor
      character(:),allocatable :: i_name      !< ICON-internal short name
