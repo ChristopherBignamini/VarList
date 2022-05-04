@@ -17,7 +17,9 @@ module var_descriptor_mod
   
 contains
 
-  function t_var_descriptor_create(i_name, i_jg, i_hgridID, i_vgridID, i_timeID) result(var_descriptor)
+!  function t_var_descriptor_create(i_name, i_jg, i_hgridID, i_vgridID, i_timeID) result(var_descriptor)
+  function t_var_descriptor_create(i_jg, i_hgridID, i_vgridID, i_timeID) result(var_descriptor)
+     implicit none
      type(t_var_descriptor) :: var_descriptor
      character(:),allocatable :: i_name      !< ICON-internal short name
      integer :: i_jg        !< logical patch ID
@@ -27,7 +29,7 @@ contains
      var_descriptor%name = i_name
      var_descriptor%jg = i_jg
      var_descriptor%hgridID = i_hgridID
-     var_descriptor%vgridID = vgridID
+     var_descriptor%vgridID = i_vgridID
      var_descriptor%timeId = i_timeID
   end function t_var_descriptor_create
   

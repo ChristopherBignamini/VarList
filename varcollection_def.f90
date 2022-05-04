@@ -10,7 +10,7 @@ interface
         use, intrinsic :: iso_c_binding
         implicit none
         type(c_ptr), value :: varcollection
-    end subroutine varlist_delete_c
+    end subroutine varcollection_delete_c
 
     ! TODO: use generic variable_type
     ! TODO: this should be a subroutine, right?
@@ -26,7 +26,7 @@ interface
         character(len=1, kind=C_CHAR), intent(in) :: long_name(*)    
         character(len=1, kind=C_CHAR), intent(in) :: short_name(*)   
         integer(c_int), intent(in) :: datatype                       
-        real(dp) :: val(:,:)
+        real*8 :: value_pointer(:,:) ! TODO: real(dp)
     end subroutine varcollection_append_c
 
     subroutine varcollection_append_2D_c(varcollection, name, val) bind(C, name="varcollection_strcfi_append")
@@ -76,7 +76,8 @@ interface
         type(c_ptr), intent(in), value :: varcollection
     end function varcollection_getId_c
 
-    subroutine varcollection_getName_c(varcollection, varcollection_name, varcollection_name_length) bind(C, name="varcollection_strcfi_getName") ! TODO: I'm not sure of signature and implementation
+    subroutine varcollection_getName_c(varcollection, varcollection_name, varcollection_name_length) &
+         bind(C, name="varcollection_strcfi_getName") ! TODO: I'm not sure of signature and implementation
         use, intrinsic :: iso_c_binding
         implicit none
         character(len=1, kind=C_CHAR) :: varcollection_name

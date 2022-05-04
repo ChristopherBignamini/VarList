@@ -4,11 +4,18 @@ module var_metadata_mod
 
   type t_var_metadata
      private
-     character(len=*) :: standard_name
-     character(len=*) :: units
-     character(len=*) :: long_name
+     ! TODO: can we use variable lenght strings?
+     character(len=128) :: standard_name
+     character(len=128) :: units
+     character(len=128) :: long_name
      integer :: datatype
-     character(len=*) :: short_name
+     character(len=128) :: short_name
+  contains
+     procedure :: getStandardName => t_var_metadata_getStandardName
+     procedure :: getUnits => t_var_metadata_getUnits
+     procedure :: getLongName => t_var_metadata_getLongName
+     procedure :: getDatatype => t_var_metadata_getDatatype
+     procedure :: getShortName => t_var_metadata_getShortName
   end type t_var_metadata
 
   interface t_var_metadata
@@ -30,5 +37,48 @@ contains
     var_metadata%datatype = i_datatype
     var_metadata%short_name = i_short_name
   end function t_var_metadata_create
+     
+  function t_var_metadata_getStandardName(this) result(standard_name)
+    implicit none
+    class(t_var_metadata), intent(in) :: this
+    character(len=:), allocatable :: standard_name
+    allocate(character(len(this%standard_name)) :: standard_name)
+    standard_name = this%standard_name
+  end function t_var_metadata_getStandardName
+  
+  
+  function t_var_metadata_getUnits(this) result(units)
+    implicit none
+    class(t_var_metadata), intent(in) :: this
+    character(len=:), allocatable :: units
+    allocate(character(len(this%units)) :: units) 
+    units = this%units
+  end function t_var_metadata_getUnits
+  
+  
+  function t_var_metadata_getLongName(this) result(long_name)
+    implicit none
+    class(t_var_metadata), intent(in) :: this
+    character(len=:), allocatable :: long_name
+    allocate(character(len(this%long_name)) :: long_name) 
+    long_name = this%long_name
+  end function t_var_metadata_getLongName
+  
+  
+  function t_var_metadata_getDataType(this) result(datatype)
+    implicit none
+    class(t_var_metadata), intent(in) :: this
+    integer :: datatype
+    datatype = this%datatype
+  end function t_var_metadata_getDataType
+  
+  
+  function t_var_metadata_getShortName(this) result(short_name)
+    implicit none
+    class(t_var_metadata), intent(in) :: this
+    character(len=:), allocatable :: short_name
+    allocate(character(len(this%short_name)) :: short_name) 
+    short_name = this%short_name
+  end function t_var_metadata_getShortName
   
 end module var_metadata_mod

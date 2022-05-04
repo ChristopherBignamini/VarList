@@ -1,21 +1,25 @@
 module varcollection_mod
     use, intrinsic :: iso_c_binding
     use var_mod, only : t_var
+    use var_metadata_mod, only : t_var_metadata
+    use var_data_mod, only : t_var_data
     
     private
     public :: varcollection
 
+    include "varcollection_def.f90"
+    
     type varcollection
         private
         type(c_ptr) :: varcollection_ptr
     contains
-        final :: varcollection_delete
+        final :: delete
         procedure :: search => varcollection_search
         procedure :: search_2D => varcollection_search_2D
         procedure :: search_scalar => varcollection_search_scalar
         procedure :: getId => varcollection_getId
-        procedure :: getName => varcollection_getName
-        procedure :: getCollectionSize => varcollection_getCollectionSize
+!        procedure :: getName => varcollection_getName
+        procedure :: getSize => varcollection_getSize
     end type varcollection
 
     interface varcollection
@@ -30,29 +34,34 @@ contains
         character(len=*), intent(in) :: str
         type(t_var), intent(in) :: var_array(:)
         character(len=1, kind=C_CHAR) :: c_str(len_trim(str) + 1)
-        integer i, N
+        integer :: i, N
         call convertToCString(str,c_str)
         varcollection_create%varcollection_ptr = varcollection_create_c(c_str)
-        do i=1:N
-           call append(this, var_array(i))
+        do i = 1, N
+           call append(varcollection_create, var_array(i))
         enddo
-    end function varlist_create
+    end function varcollection_create
     
-    subroutine varcollection_delete(this)
+    subroutine delete(this)
         implicit none
         type(varcollection) :: this
         call varcollection_delete_c(this%varcollection_ptr)
-    end subroutine varcollection_delete
+    end subroutine delete
       
     subroutine append(this, var)
         implicit none
-        type(varcollection) :: this
+        class(varcollection) :: this
         type(t_var), intent(in) :: var
+        type(t_var_metadata), pointer :: meta_data_ptr
+        type(t_var_data), pointer :: data_ptr
+        meta_data_ptr => var%getMetadata()
+        data_ptr => var%getData()
         ! TODO: p type detection procedure implementation 
-        call variable_append_c(this%varlist_cfi_ptr, &
-             var%var_descriptor, &
-             var%meta_data.standard_name, var%meta_data.units, var%meta_data.long_name, var%meta_data.short_name, var%meta_data.datatype, &
-             var%var_data%p)
+        call variable_append_c(this%varcollection_ptr, &
+             var%getDescriptor(), &
+             meta_data_ptr%getStandardName(), meta_data_ptr%getUnits(), meta_data_ptr%getLongName(), &
+             meta_data_ptr%getShortName(), meta_data_ptr%getDatatype(), &
+             data_ptr%getDataPointer())
     end subroutine append
       
 !    subroutine varlist_append(this, name, val)
@@ -92,80 +101,55 @@ contains
         character(len=*), intent(in) :: name
         character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
         call convertToCString(name,c_name)
-        call varcollection_search_c(this%varlist_cfi_ptr, c_name, varlist_search)
+        call varcollection_search_c(this%varcollection_ptr, c_name, varcollection_search)
     end function varcollection_search
 
-    function varlist_search_2D(this, name)
+    function varcollection_search_2D(this, name)
         implicit none
-        real*8, pointer :: varlist_search_2D(:,:)
-        class(varlist_cfi), intent(in) :: this
+        real*8, pointer :: varcollection_search_2D(:,:)
+        class(varcollection), intent(in) :: this
         character(len=*), intent(in) :: name
         character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
         call convertToCString(name,c_name)
-        call varlist_search_2D_c(this%varlist_cfi_ptr, c_name, varlist_search_2D)
-    end function varlist_search_2D
+        call varlist_search_2D_c(this%varcollection_ptr, c_name, varcollection_search_2D)
+    end function varcollection_search_2D
 
-    function varlist_search_scalar(this, name)
+    function varcollection_search_scalar(this, name)
         implicit none
-        real*8 :: varlist_search_scalar
-        class(varlist_cfi), intent(in) :: this
+        real*8 :: varcollection_search_scalar
+        class(varcollection), intent(in) :: this
         character(len=*), intent(in) :: name
         character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
         call convertToCString(name,c_name)
-        call varlist_search_scalar_c(this%varlist_cfi_ptr, c_name, varlist_search_scalar)
-    end function varlist_search_scalar
+        call varlist_search_scalar_c(this%varcollection_ptr, c_name, varcollection_search_scalar)
+    end function varcollection_search_scalar
 
-    subroutine varlist_finalize(this)
+    integer function varcollection_getId(this)
         implicit none
-        class(varlist_cfi) :: this
-        call varlist_finalize_c(this%varlist_cfi_ptr)
-    end subroutine varlist_finalize
+        class(varcollection), intent(in) :: this
+        varcollection_getId = varcollection_getId_c(this%varcollection_ptr)
+    end function varcollection_getId
 
-    integer function varlist_getId(this)
-        implicit none
-        class(varlist_cfi), intent(in) :: this
-        varlist_getId = varlist_getId_c(this%varlist_cfi_ptr)
-    end function varlist_getId
-
-    !! TODO: "strongly inspired" by the following link..
-    !! https://stackoverflow.com/questions/9972743/creating-a-fortran-interface-to-a-c-function-that-returns-a-char
-    function varlist_getName(this) ! TODO: I'm not sure of signature and implementation
-        use, intrinsic :: iso_c_binding
-        implicit none
-        character*255 :: varlist_getName
-        character*255 list_name
-        integer name_length
-        class(varlist_cfi), intent(in) :: this
-
-        call varlist_getName_c(this%varlist_cfi_ptr, list_name, name_length)
-
-        varlist_getName = list_name(1:name_length)
-    end function varlist_getName
-
-    integer function varlist_getListLength(this)
-        implicit none
-        class(varlist_cfi), intent(in) :: this
-        varlist_getListLength = varlist_getListLength_c(this%varlist_cfi_ptr)
-    end function varlist_getListLength
-
-!    function varlist_getFirstVariable(this) result(varlist_first_variable)
-!        implicit none
+!    !! TODO: "strongly inspired" by the following link..
+!    !! https://stackoverflow.com/questions/9972743/creating-a-fortran-interface-to-a-c-function-that-returns-a-char
+!    function varcollection_getName(this) ! TODO: I'm not sure of signature and implementation
+!        use, intrinsic :: iso_c_binding
+!       implicit none
+!        character*255 :: varlist_getName
+!        character*255 list_name
+!        integer name_length
 !        class(varlist_cfi), intent(in) :: this
-!        type(varlist_item) :: varlist_first_variable
-!        type(varlist_item_c) :: varlist_first_variable_c
-!        varlist_first_variable_c = varlist_getFirstVariable_c(this%varlist_cfi_ptr)
-!        varlist_first_variable = varlist_item(varlist_first_variable_c%name, varlist_first_variable_c%value_cfi_ptr)
-!    end function varlist_getFirstVariable
+!
+!        call varlist_getName_c(this%varlist_cfi_ptr, list_name, name_length)
+!
+!        varlist_getName = list_name(1:name_length)
+!    end function varlist_getName
 
-!    function varlist_getNextVariable(this, current_variable) result(varlist_next_variable)
-!        implicit none
-!        class(varlist_cfi), intent(in) :: this
-!        class(varlist_cfi_item), intent(in) :: current_variable ! TODO: only the key is needed
-!        type(varlist_cfi_item) :: varlist_next_variable
-!        type(varlist_item_c) :: varlist_next_variable_c
-!        varlist_next_variable_c = varlist_getNextVariable_c(this%varlist_cfi_ptr, current_variable%getName())
-!        varlist_next_variable = varlist_item(varlist_next_variable_c%name, varlist_next_variable_c%value_cfi_ptr)
-!    end function varlist_getNextVariable
+    integer function varcollection_getSize(this)
+        implicit none
+        class(varcollection), intent(in) :: this
+        varcollection_getSize = varcollection_getSize_c(this%varcollection_ptr)
+    end function varcollection_getSize
 
     ! TODO: buggy subroutine? Do I need to allocate io_cstring outside with the correct lenght?
     subroutine convertToCString(i_fstring, io_cstring)

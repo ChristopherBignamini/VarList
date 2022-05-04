@@ -1,5 +1,10 @@
 program test_varcollection
-    use varlistcollection
+    use varcollection_mod, only: varcollection
+    use var_mod, only: t_var
+    use var_descriptor_mod, only: t_var_descriptor
+    use var_metadata_mod, only: t_var_metadata
+    use var_data_mod, only: t_var_data
+    
     implicit none
     type(varcollection) :: f_varcollection
     integer :: i, j, m, n, p
@@ -10,7 +15,8 @@ program test_varcollection
     real*8 :: pressure, mem_pressure
     integer :: number_of_items, item_number
     type(t_var) :: var_array(3)
-
+    type(t_var_descriptor) :: vardescriptor
+    
     ! Allocate and store fields
     m = 5
     n = 3
@@ -21,21 +27,22 @@ program test_varcollection
     wind_short_speed_xy = reshape([100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0], [3,3])
     pressure = 23.0
 
+    vardescriptor = t_var_descriptor("name", 0, 1, 2, 3)
     
-    var_array(1) = t_var(t_var_descriptor("name_x",0, 1, 2, 3), &
-         t_metadata("standard_name_x", "units_x", "long_name_x", 1, "short_name_x"), &
-         t_var_data(.true., wind_speed_x)) 
+  !  var_array(1) = t_var(t_var_descriptor("name_x",0, 1, 2, 3), &
+  !       t_metadata("standard_name_x", "units_x", "long_name_x", 1, "short_name_x"), &
+  !       t_var_data(.true., wind_speed_x)) 
 
-    var_array(2) = t_var(t_var_descriptor("name_y",0, 1, 2, 3), &
-         t_metadata("standard_name_y", "units_y", "long_name_y", 2, "short_name_y"), &
-         t_var_data(.true., wind_speed_y)) 
+ !   var_array(2) = t_var(t_var_descriptor("name_y",0, 1, 2, 3), &
+ !        t_metadata("standard_name_y", "units_y", "long_name_y", 2, "short_name_y"), &
+ !        t_var_data(.true., wind_speed_y)) 
 
-    var_array(3) = t_var(t_var_descriptor("name_short_x",0, 1, 2, 3), &
-         t_metadata("standard_name_short_x", "units_short_x", "long_name_short_x", 3, "short_name_short_x"), &
-         t_var_data(.true., wind_short_speed_xy)) 
+ !   var_array(3) = t_var(t_var_descriptor("name_short_x",0, 1, 2, 3), &
+ !        t_metadata("standard_name_short_x", "units_short_x", "long_name_short_x", 3, "short_name_short_x"), &
+ !        t_var_data(.true., wind_short_speed_xy)) 
 
     ! Create varcollection
-    f_varcollection = varcollection("test varcollection", var_array)
+ !   f_varcollection = varcollection("test varcollection", var_array)
 
     
     ! Print varlist data
@@ -137,7 +144,7 @@ program test_varcollection
 
     
 #ifdef __GNUC__
-    call f_varcollection%delete
+!    call f_varcollection%delete
 #endif
 end program
 

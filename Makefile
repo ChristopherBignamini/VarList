@@ -19,7 +19,7 @@ test_varcollection.o : test_varcollection.f90
 varcollection_mod.o : varcollection_mod.f90 t_var_mod.o
 	${FC} ${FCFLAGS} -c varcollection_mod.f90 -o varcollection_mod.o
 
-t_var_mod.o : t_var_mod.f90 t_var_descriptor_mod.o t_var_metadata_mod.o 
+t_var_mod.o : t_var_mod.f90 t_var_descriptor_mod.o t_var_metadata_mod.o t_var_data_mod.o
 	${FC} ${FCFLAGS} -c t_var_mod.f90 -o t_var_mod.o
 
 t_var_data_mod.o : t_var_data_mod.f90
