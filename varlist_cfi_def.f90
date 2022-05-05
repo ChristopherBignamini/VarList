@@ -62,12 +62,6 @@ interface
         character(len=1, kind=C_CHAR), intent(in) :: name(*)
     end subroutine varlist_search_scalar_c
 
-    subroutine varlist_finalize_c(varlist) bind(C, name="varlist_finalize")
-        use, intrinsic :: iso_c_binding
-        implicit none
-        type(c_ptr), value :: varlist
-    end subroutine varlist_finalize_c
-
     function varlist_getId_c(varlist) bind(C, name="varlist_strcfi_getId")
         use, intrinsic :: iso_c_binding
         implicit none

@@ -17,7 +17,6 @@ module libvarlistcfi
         procedure :: append => varlist_append
         procedure :: append_2D => varlist_append_2D
         procedure :: append_scalar => varlist_append_scalar
-        procedure :: finalize => varlist_finalize
         procedure :: search => varlist_search
         procedure :: search_2D => varlist_search_2D
         procedure :: search_scalar => varlist_search_scalar
@@ -115,12 +114,6 @@ contains
         call convertToCString(name,c_name)
         call varlist_search_scalar_c(this%varlist_cfi_ptr, c_name, varlist_search_scalar)
     end function varlist_search_scalar
-
-    subroutine varlist_finalize(this)
-        implicit none
-        class(varlist_cfi) :: this
-        call varlist_finalize_c(this%varlist_cfi_ptr)
-    end subroutine varlist_finalize
 
     integer function varlist_getId(this)
         implicit none
