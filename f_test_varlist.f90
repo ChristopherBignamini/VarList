@@ -1,7 +1,7 @@
 program test_varlist
-    use libvarlistcfi
+    use libvarlist
     implicit none
-    type(varlist_cfi) :: f_varlist_cfi, f_varlist_cfi_2D
+    type(varlist) :: f_varlist, f_varlist_2D
     real*8, pointer :: val_ptr
     integer :: i, j, m, n, p
     real*8, pointer :: mem_wind_speed_x(:), mem_wind_speed_y(:), mem_wind_short_speed_x(:), mem_wind_short_speed_xy(:,:)
@@ -12,7 +12,7 @@ program test_varlist
     integer :: number_of_items, item_number
 
     ! Create varlist
-    f_varlist_cfi = varlist_cfi("test varlist cfi")
+    f_varlist = varlist("test varlist cfi")
     
     ! Allocate and store 1D field
     m = 5
@@ -26,20 +26,20 @@ program test_varlist
     
     ! Add elements to varlist
     print*,'Append 1'
-    call f_varlist_cfi%append("wind_speed_in_x",wind_speed_x)
+    call f_varlist%append("wind_speed_in_x",wind_speed_x)
     print*,'Append 2'
-    call f_varlist_cfi%append("wind_speed_in_y",wind_speed_y)
+    call f_varlist%append("wind_speed_in_y",wind_speed_y)
     print*,'Append 3'
-    call f_varlist_cfi%append("wind_short_speed_in_x",wind_short_speed_x)
+    call f_varlist%append("wind_short_speed_in_x",wind_short_speed_x)
     print*,'Append 2D'
-    call f_varlist_cfi%append_2D("wind_short_speed_in_xy",wind_short_speed_xy) 
+    call f_varlist%append_2D("wind_short_speed_in_xy",wind_short_speed_xy) 
     print*, 'Append scalar'
-    call f_varlist_cfi%append_scalar("pressure",pressure)
+    call f_varlist%append_scalar("pressure",pressure)
     
     
     ! Search element
     print*,'Search'
-    mem_wind_speed_y => f_varlist_cfi%search("wind_speed_in_y")
+    mem_wind_speed_y => f_varlist%search("wind_speed_in_y")
     print*, " "
     print*, "wind_speed_in_y"
     if (associated(mem_wind_speed_y)) then
@@ -48,7 +48,7 @@ program test_varlist
        end do
     endif
 
-    mem_wind_speed_x => f_varlist_cfi%search("wind_speed_in_x")
+    mem_wind_speed_x => f_varlist%search("wind_speed_in_x")
     print*, " "
     print*, "wind_speed_in_x"
     if (associated(mem_wind_speed_x)) then
@@ -57,7 +57,7 @@ program test_varlist
        end do
     endif
 
-    mem_wind_short_speed_x => f_varlist_cfi%search("wind_short_speed_in_x")
+    mem_wind_short_speed_x => f_varlist%search("wind_short_speed_in_x")
     print*, " "
     print*, "wind_short_speed_in_x"
     if (associated(mem_wind_short_speed_x)) then
@@ -66,7 +66,7 @@ program test_varlist
        end do
     endif
 
-    mem_wind_short_speed_xy => f_varlist_cfi%search_2D("wind_short_speed_in_xy")
+    mem_wind_short_speed_xy => f_varlist%search_2D("wind_short_speed_in_xy")
     print*, " "
     print*, "wind_short_speed_in_xy"
     if (associated(mem_wind_short_speed_xy)) then
@@ -79,12 +79,12 @@ program test_varlist
 
     print*, " "
     print*, "pressure"
-    mem_pressure = f_varlist_cfi%search_scalar("pressure") 
+    mem_pressure = f_varlist%search_scalar("pressure") 
     print*, pressure
 
     
 #ifdef __GNUC__
-    call f_varlist_cfi%delete
+    call f_varlist%delete
 #endif
 end program
 
