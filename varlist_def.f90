@@ -30,6 +30,22 @@ interface
         real(c_double) :: val(:,:)
     end subroutine varlist_append_2D_c
 
+    subroutine varlist_append_3D_c(varlist, name, val) bind(C, name="varlist_append")
+        use, intrinsic :: iso_c_binding
+        implicit none
+        type(c_ptr), value :: varlist
+        character(len=1, kind=C_CHAR), intent(in) :: name(*)
+        real(c_double) :: val(:,:,:)
+    end subroutine varlist_append_3D_c
+
+    subroutine varlist_append_4D_c(varlist, name, val) bind(C, name="varlist_append")
+        use, intrinsic :: iso_c_binding
+        implicit none
+        type(c_ptr), value :: varlist
+        character(len=1, kind=C_CHAR), intent(in) :: name(*)
+        real(c_double) :: val(:,:,:,:)
+    end subroutine varlist_append_4D_c
+
     subroutine varlist_append_scalar_c(varlist, name, val) bind(C, name="varlist_append")
         use, intrinsic :: iso_c_binding
         implicit none
@@ -53,6 +69,22 @@ interface
         real(c_double) :: variable(:,:)
         character(len=1, kind=C_CHAR), intent(in) :: name(*)
     end subroutine varlist_search_2D_c
+
+    subroutine varlist_search_3D_c(varlist, name, variable) bind(C, name="varlist_search")
+        use, intrinsic :: iso_c_binding
+        implicit none
+        type(c_ptr), intent(in), value :: varlist
+        real(c_double) :: variable(:,:,:)
+        character(len=1, kind=C_CHAR), intent(in) :: name(*)
+    end subroutine varlist_search_3D_c
+
+    subroutine varlist_search_4D_c(varlist, name, variable) bind(C, name="varlist_search")
+        use, intrinsic :: iso_c_binding
+        implicit none
+        type(c_ptr), intent(in), value :: varlist
+        real(c_double) :: variable(:,:,:,:)
+        character(len=1, kind=C_CHAR), intent(in) :: name(*)
+    end subroutine varlist_search_4D_c
 
     subroutine varlist_search_scalar_c(varlist, name, variable) bind(C, name="varlist_search")
         use, intrinsic :: iso_c_binding
