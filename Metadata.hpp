@@ -32,6 +32,7 @@ public:
  *
  * TODO: add documentation
  */
+/*
 class MetadataGRIB2 : public MetadataBase {
 
 public:
@@ -53,3 +54,4 @@ private:
     std::unordered_map<std::string, std::variant<int, double>> m_extra_grib2_keys;
 
 };
+*/
