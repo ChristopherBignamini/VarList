@@ -1,5 +1,6 @@
 module libvarlistcfi
     use, intrinsic :: iso_c_binding
+    use libscalarpointer
     use libvarlistcfiitem
     use libvarlistitem_c
     use libutils
@@ -17,10 +18,12 @@ module libvarlistcfi
         procedure :: delete => varlist_delete_polymorph ! TODO: ???
         procedure :: append => varlist_append
         procedure :: append_2D => varlist_append_2D
+        procedure :: append_3D => varlist_append_3D
         procedure :: append_scalar => varlist_append_scalar
         procedure :: finalize => varlist_finalize
         procedure :: search => varlist_search
         procedure :: search_2D => varlist_search_2D
+        procedure :: search_3D => varlist_search_3D
         procedure :: search_scalar => varlist_search_scalar
         procedure :: getId => varlist_getId
         procedure :: getName => varlist_getName
@@ -37,11 +40,12 @@ contains
 
     function varlist_create(str)
         implicit none
-        type(varlist_cfi) :: varlist_create
+        type(varlist_cfi)  ::  varlist_create
         character(len=*), intent(in) :: str
-        character(len=1, kind=C_CHAR) :: c_str(len_trim(str) + 1)
-        call convertToCString(str,c_str)
-        varlist_create%varlist_cfi_ptr = varlist_create_c(c_str)
+!        character(len=1, kind=C_CHAR) :: c_str(len_trim(str) + 1)
+!        call convertToCString(str,c_str)
+!        varlist_create%varlist_cfi_ptr = varlist_create_c(c_str)
+        varlist_create%varlist_cfi_ptr = varlist_create_c(str)
     end function varlist_create
 
     subroutine varlist_delete(this)
@@ -62,9 +66,10 @@ contains
         class(varlist_cfi), intent(in) :: this
         character(len=*), intent(in) :: name
         real*8, intent(in) :: val(:)
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_append_c(this%varlist_cfi_ptr, c_name, val)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_append_c(this%varlist_cfi_ptr, c_name, val)
+        call varlist_append_c(this%varlist_cfi_ptr, name, val)
     end subroutine varlist_append
 
     subroutine varlist_append_2D(this, name, val)
@@ -72,19 +77,37 @@ contains
         class(varlist_cfi), intent(in) :: this
         character(len=*), intent(in) :: name
         real*8, intent(in) :: val(:,:)
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
+        call varlist_append_2D_c(this%varlist_cfi_ptr, name, val)
     end subroutine varlist_append_2D
+
+    subroutine varlist_append_3D(this, name, val)
+        implicit none
+        class(varlist_cfi), intent(in) :: this
+        character(len=*), intent(in) :: name
+        real*8, intent(in) :: val(:,:,:)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_append_2D_c(this%varlist_cfi_ptr, c_name, val)
+        call varlist_append_3D_c(this%varlist_cfi_ptr, name, val)
+    end subroutine varlist_append_3D
 
     subroutine varlist_append_scalar(this, name, val)
         implicit none
         class(varlist_cfi), intent(in) :: this
         character(len=*), intent(in) :: name
-        real*8, intent(in) :: val
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_append_scalar_c(this%varlist_cfi_ptr, c_name, val)
+        real*8, intent(in), target :: val
+!        real*8, pointer :: val_array(:)
+!        allocate(val_array(1))
+!        val_array(1) => val
+        type(scalarpointer), dimension(1) :: val_array
+        val_array(1)%scalar_p = c_loc(val)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_append_scalar_c(this%varlist_cfi_ptr, c_name, val)
+        call varlist_append_scalar_c(this%varlist_cfi_ptr, name, val_array)
     end subroutine varlist_append_scalar
 
     function varlist_search(this, name)
@@ -92,9 +115,10 @@ contains
         real*8, pointer :: varlist_search(:)
         class(varlist_cfi), intent(in) :: this
         character(len=*), intent(in) :: name
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_search_c(this%varlist_cfi_ptr, c_name, varlist_search)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_search_c(this%varlist_cfi_ptr, c_name, varlist_search)
+        call varlist_search_c(this%varlist_cfi_ptr, name, varlist_search)
     end function varlist_search
 
     function varlist_search_2D(this, name)
@@ -102,19 +126,39 @@ contains
         real*8, pointer :: varlist_search_2D(:,:)
         class(varlist_cfi), intent(in) :: this
         character(len=*), intent(in) :: name
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_search_2D_c(this%varlist_cfi_ptr, c_name, varlist_search_2D)
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_search_2D_c(this%varlist_cfi_ptr, c_name, varlist_search_2D)
+        call varlist_search_2D_c(this%varlist_cfi_ptr, name, varlist_search_2D)
     end function varlist_search_2D
 
-    function varlist_search_scalar(this, name)
+    function varlist_search_3D(this, name)
         implicit none
+        real*8, pointer :: varlist_search_3D(:,:,:)
+        class(varlist_cfi), intent(in) :: this
+        character(len=*), intent(in) :: name
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_search_2D_c(this%varlist_cfi_ptr, c_name, varlist_search_2D)
+        call varlist_search_3D_c(this%varlist_cfi_ptr, name, varlist_search_3D)
+    end function varlist_search_3D
+
+    function varlist_search_scalar(this, name)
+      implicit none
+
+      real*8, pointer :: tmp(:)
         real*8 :: varlist_search_scalar
         class(varlist_cfi), intent(in) :: this
         character(len=*), intent(in) :: name
-        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
-        call convertToCString(name,c_name)
-        call varlist_search_scalar_c(this%varlist_cfi_ptr, c_name, varlist_search_scalar)
+!        real*8, dimension(1) :: val_array
+        type(scalarpointer), dimension(1) :: val_array
+
+!        character(len=1, kind=C_CHAR) :: c_name(len_trim(name) + 1)
+!        call convertToCString(name,c_name)
+!        call varlist_search_scalar_c(this%varlist_cfi_ptr, c_name, varlist_search_scalar)
+        call varlist_search_scalar_c(this%varlist_cfi_ptr, name, val_array)
+        call c_f_pointer(val_array(1)%scalar_p, tmp, [1])
+        varlist_search_scalar = tmp(1)
     end function varlist_search_scalar
 
     subroutine varlist_finalize(this)
