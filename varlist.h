@@ -79,6 +79,10 @@ extern "C" {
     // TODO: is it possible to avoid code duplication varlist_strcfi_append, varlist_append, etc...
     void varlist_strcfi_append(VARLISTSTRCFI* io_varlist, const char* i_name, CFI_cdesc_t* i_value);
 
+    // TODO: fix design and signature
+    //    void varlist_addMetadata(VARLISTSTRCFI* io_varlist, const char* i_name, const char* i_standard_name,
+    //                         const char* i_units, const char* i_long_name, int i_datatype, const char* i_short_name);
+
     void varlist_finalize(VARLIST* i_varlist);
 
     // TODO: how to we manage template and C interfacing?

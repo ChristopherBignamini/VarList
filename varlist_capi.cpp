@@ -43,8 +43,17 @@ void varlist_append(VARLIST* io_varlist, int i_name, double i_value)
 
 void varlist_strcfi_append(VARLISTSTRCFI* io_varlist, const char* i_name, CFI_cdesc_t* i_value)
 {
-    io_varlist->append(i_name, CFICDesc(*i_value));
+    std::cout<<"varlist_strcfi_append start"<<std::endl;
+    std::cout<<"TODO: i_value->dim[0].extent is wrong for scalars"<<std::endl;
+    io_varlist->append(std::string(i_name), CFICDesc(*i_value));
+    std::cout<<"varlist_strcfi_append end"<<std::endl;
 }
+
+//void varlist_addMetadata(VARLISTSTRCFI* io_varlist, const char* i_name, const char* i_standard_name,
+//                         const char* i_units, const char* i_long_name, int i_datatype, const char* i_short_name)
+//{
+//    io_varlist->setMetadata(i_name, MetadataCF(i_standard_name, i_units, i_long_name, i_datatype, i_short_name));
+//}
 
 void varlist_finalize(VARLIST* io_varlist)
 {
