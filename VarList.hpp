@@ -1,5 +1,6 @@
 #include <string>
 #include <unordered_map>
+//#include "Metadata.hpp"
 
 template <typename T, typename V>
 class VarList {
@@ -37,9 +38,20 @@ public:
         m_list.insert({i_new_variable_name, i_new_variable_value});
     }
 
+    /*    void setMetadata(const T& i_variable_name, const MetadataCF& i_metadata)
+    {
+        // TODO: temporarily, only metadata for existing variables can be added
+        typename std::unordered_map<T,V>::const_iterator item = m_list.find(i_variable_name);
+        if(item == m_list.end())
+            return;
+
+        m_metadata_list.insert({i_variable_name, i_metadata});
+        }*/
+
     void finalize(void)
     {
         m_list.clear();
+        //        m_metadata_list.clear();
     }
 
     // TODO: is key-based search the only one we need?
@@ -47,11 +59,21 @@ public:
     const V* search(const T& i_variable_name) const
     {
         typename std::unordered_map<T,V>::const_iterator item = m_list.find(i_variable_name);
-        if(item != m_list.end())
+        if(item != m_list.end()) {
             return &(item->second);
+        }
         else
             return NULL;
     }
+
+    /*    const MetadataCF* searchMetadata(const T& i_variable_name) const
+    {
+        typename std::unordered_map<T,MetadataCF>::const_iterator item = m_metadata_list.find(i_variable_name);
+        if(item != m_metadata_list.end())
+            return &(item->second);
+        else
+            return NULL;
+            }*/
 
     unsigned int getId(void) const
     {
@@ -91,6 +113,8 @@ public:
 private:
 
     std::unordered_map<T,V> m_list;
+
+    //    std::unordered_map<T,MetadataCF> m_metadata_list;
 
     const unsigned int m_list_id;
 
