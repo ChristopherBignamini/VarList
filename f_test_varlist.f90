@@ -17,7 +17,7 @@ program test_varlist
     real*8, dimension(3,3) :: wind_short_speed_xy
     real*8, dimension(2,2,2) :: wind_short_speed_xyz
     real*8 :: pressure, mem_pressure
-    integer :: number_of_items, item_number, datatype
+    integer :: number_of_items, item_number, datatype, err
 
     ! Create varlist
 !    f_varlist = varlist("test varlist", <key,data>)
@@ -96,9 +96,9 @@ program test_varlist
  !   print*,'Append 3'
  !   call f_varlist_cfi%append("wind_short_speed_in_x",wind_short_speed_x)
     print*,'Append 2D'
-    call f_varlist_cfi%append_2D("wind_short_speed_in_xy",wind_short_speed_xy)
+    call f_varlist_cfi%append("wind_short_speed_in_xy",wind_short_speed_xy)
     print*,'Append 3D'
-    call f_varlist_cfi%append_3D("wind_short_speed_in_xyz",wind_short_speed_xyz)
+    call f_varlist_cfi%append("wind_short_speed_in_xyz",wind_short_speed_xyz)
     
     print*, " "
     print*, "pressure"
@@ -118,7 +118,8 @@ program test_varlist
 !       end do
 !    endif
 !
-    mem_wind_speed_x => f_varlist_cfi%search("wind_speed_in_x")
+!    mem_wind_speed_x => f_varlist_cfi%search("wind_speed_in_x")
+    err = f_varlist_cfi%search("wind_speed_in_x", mem_wind_speed_x)
     print*, " "
     print*, "wind_speed_in_x"
     if (associated(mem_wind_speed_x)) then
@@ -136,7 +137,8 @@ program test_varlist
 !       end do
 !    endif
 !
-    mem_wind_short_speed_xy => f_varlist_cfi%search_2D("wind_short_speed_in_xy")
+!    mem_wind_short_speed_xy => f_varlist_cfi%search_2D("wind_short_speed_in_xy")
+    err = f_varlist_cfi%search("wind_short_speed_in_xy", mem_wind_short_speed_xy)
     print*, " "
     print*, "wind_short_speed_in_xy"
     if (associated(mem_wind_short_speed_xy)) then
@@ -148,7 +150,8 @@ program test_varlist
     endif
 
 
-    mem_wind_short_speed_xyz => f_varlist_cfi%search_3D("wind_short_speed_in_xyz")
+!    mem_wind_short_speed_xyz => f_varlist_cfi%search_3D("wind_short_speed_in_xyz")
+    err = f_varlist_cfi%search("wind_short_speed_in_xyz", mem_wind_short_speed_xyz)
     print*, " "
     print*, "wind_short_speed_in_xyz"
     if (associated(mem_wind_short_speed_xyz)) then
